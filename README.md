@@ -1,2 +1,2 @@
 # NSU_APP
-# Pattern.png
+![alt text](Pattern.png "Схема паттерна")
