@@ -1,4 +1,6 @@
-global token = "SCFFAtHIAFhTa4HOBoAvOgqMDqq8uOBd_1648434328"
+import requests
+
+token = "SCFFAtHIAFhTa4HOBoAvOgqMDqq8uOBd_1648434328"
 links = {
     "faculty":"table.nsu.ru/api/faculties",
     "teacher":"table.nsu.ru/api/teachers",
@@ -10,4 +12,11 @@ links = {
     "exam-group":"table.nsu.ru/api/exam-groups",
     "schedule":"table.nsu.ru/api/schedules",
 }
+
 # запрос links["<type_information>"] + "/search?" + ...
+
+def get_Time_By_IdTime(id_time :str):
+    link_request = links["time"] + "/search?" +
+
+def get_smb():
+    ...

@@ -22,11 +22,20 @@ class Lesson():
         self.id_time = id_time
         self.room = room
 
-class Shedule():
+# Order.shedule[weekday][time]
+# по существу, это понедельный календарь
+class Order():
 
-    def __init__(self,):    
-        # тут пока хз
-        # как расписание разбивать
+    # предполагается передача массива, состоящего из Lesson
+    def __init__(self,list_Of_Lesson):
+
+        self.schedule = {weekday:dict() for weekday in range(1,7)}
+        # self.calendar = ... - это на будущее
+
+        for lesson in list_Of_Lesson:
+            # могут быть проблемы с отображением времени
+            # из-за оперированием id_time, а не time
+            self.schedule[lesson.weekday][lesson.id_time] = lesson
 
 class Student():
 
