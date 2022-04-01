@@ -23,7 +23,8 @@ class Lesson():
         self.room = room
 
 class Shedule():
-    def __init__(self,):
+
+    def __init__(self,):    
         # тут пока хз
         # как расписание разбивать
 
