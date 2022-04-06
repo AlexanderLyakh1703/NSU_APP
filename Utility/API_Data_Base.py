@@ -5,7 +5,7 @@ import json
 # login:password
 AUTH = b"SCFFAtHIAFhTa4HOBoAvOgqMDqq8uOBd_1648434328:"
 
-# разделы API
+# разделы БД
 links = {
     "faculty":"/api/faculties",
     "teacher":"/api/teachers",
@@ -18,26 +18,25 @@ links = {
     "schedule":"/api/schedules",
 }
 
-def connect(type :str, search :dict):
+# type - раздел БД, search - параметры поиска
+def connect(type :str, search = dict()) -> list[dict]:
 
     # заполнение данных дл авторизации
     connect = HTTPSConnection("table.nsu.ru")
-    userAndPass = b64encode(bytes(AUTH)).decode("utf-8")
+    userAndPass = b64encode(AUTH).decode("utf-8")
     headers = { "Authorization" : "Basic %s" %  userAndPass }
 
     # собираем строку поиска
-    string_of_find = "&".join([elem+"="+search[elem] for elem in search.keys()])
+    string_of_find = ""
+    if search != dict():
+        string_of_find = "/search?"+"&".join([elem+"="+search[elem] for elem in search.keys()])
 
     # посылаем запрос
-    connect.request('GET', links[type]+"/search?"+string_of_find, headers=headers)
+    connect.request('GET', links[type]+string_of_find, headers=headers)
     res = connect.getresponse()
     data = res.read()
 
     # возвращаем ответ в виде массива словарей
     return json.loads(data.decode("utf-8"))
 
-# def get_Time_By_IdTime(id_time :str):
-#
-#
-# def get_smb():
-#     ...
+# example: print(connect("faculty",{"id":"1"}))
