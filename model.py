@@ -18,6 +18,10 @@ class Lesson():
         self.id_teacher = id_teacher
         self.id_type_lesson = id_type_lesson
         self.weekday = weekday
+
+        # чётность пары
+        self.even = even
+        
         self.id_list_group = id_groups
         self.id_time = id_time
         self.room = room
@@ -27,7 +31,7 @@ class Lesson():
 class Order():
 
     # предполагается передача массива, состоящего из Lesson
-    def __init__(self,list_Of_Lesson):
+    def __init__(self,list_Of_Lesson :list[Lesson]):
 
         self.schedule = {weekday:dict() for weekday in range(1,7)}
         # self.calendar = ... - это на будущее
@@ -39,7 +43,7 @@ class Order():
 
 class Student():
 
-    def __init__(self, id, name, id_group, id_faculty):
+    def __init__(self, **kwargs):
         self.id = id
         self.id_group = id_group
         self.id_faculty = id_faculty
