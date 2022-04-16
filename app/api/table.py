@@ -2,7 +2,7 @@ from http.client import HTTPSConnection
 from base64 import b64encode
 import json
 
-# login:password AUTH
+# login:password
 TABLE_TOKEN = b"SCFFAtHIAFhTa4HOBoAvOgqMDqq8uOBd_1648434328:"
 
 # разделы БД
