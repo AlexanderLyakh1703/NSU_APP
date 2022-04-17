@@ -3,7 +3,7 @@ from base64 import b64encode
 import json
 
 # login:password
-AUTH = b"SCFFAtHIAFhTa4HOBoAvOgqMDqq8uOBd_1648434328:"
+TABLE_TOKEN = b"SCFFAtHIAFhTa4HOBoAvOgqMDqq8uOBd_1648434328:"
 
 # разделы БД
 links = {
@@ -23,7 +23,7 @@ def connect(type :str, search = dict()) -> list[dict]:
 
     # заполнение данных дл авторизации
     connect = HTTPSConnection("table.nsu.ru")
-    userAndPass = b64encode(AUTH).decode("utf-8")
+    userAndPass = b64encode(TABLE_TOKEN).decode("utf-8")
     headers = { "Authorization" : "Basic %s" %  userAndPass }
 
     # собираем строку поиска
