@@ -30,3 +30,19 @@ class production_config(config):
 class development_config(config):
     DEVELOPMENT = True
     DEBUG = True
+
+
+# Test Google OAuth2
+class oauth_config(object):
+    CLIENT_ID = os.getenv("CLIENT_ID")
+    CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+    REDIRECT_URI = "https://127.0.0.1:5000/callback"
+
+    # OAuth endpoints given in the Google API documentation
+    AUTH_BASE_URL = "https://accounts.google.com/o/oauth2/v2/auth"
+    TOKEN_URL = "https://www.googleapis.com/oauth2/v4/token"
+    SCOPE = [
+        "openid",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/userinfo.profile",
+    ]
