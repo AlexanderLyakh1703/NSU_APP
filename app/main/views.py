@@ -24,7 +24,7 @@ def get_auth(state=None, token=None):
     )
 
 
-@main.route("/", methods={"GET"})
+# @main.route("/")
 @main.route("/login")
 def login():
     service = get_auth()
@@ -33,11 +33,10 @@ def login():
     # State is used to prevent CSRF, keep this for later.
     session["oauth_state"] = state
     print(state)
-    print(request.url)
     return redirect(authorization_url)
 
 
-@main.route("/callback", methods=["GET"])
+@main.route("/", methods=["GET"])
 def callback():
 
     print(request.url)
