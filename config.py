@@ -36,13 +36,17 @@ class development_config(config):
 class oauth_config(object):
     CLIENT_ID = os.getenv("CLIENT_ID")
     CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-    REDIRECT_URI = "https://127.0.0.1:5000/callback"
+    REDIRECT_URI = "https://nsuapp.herokuapp.com/callback"
 
     # OAuth endpoints given in the Google API documentation
-    AUTH_BASE_URL = "https://accounts.google.com/o/oauth2/v2/auth"
-    TOKEN_URL = "https://www.googleapis.com/oauth2/v4/token"
+    AUTH_BASE_URL = "https://sso.nsu.ru/auth/realms/NSU/protocol/openid-connect/auth"  # "https://accounts.google.com/o/oauth2/v2/auth"
+    TOKEN_URL = "https://sso.nsu.ru/auth/realms/NSU/protocol/openid-connect/token"  # "https://www.googleapis.com/oauth2/v4/token"
     SCOPE = [
         "openid",
-        "https://www.googleapis.com/auth/userinfo.email",
-        "https://www.googleapis.com/auth/userinfo.profile",
+        "profile",
+        "groups",
+        "roles",
+        # "https://sso.nsu.ru/auth/realms/NSU/protocol/openid-connect/logout",
+        # "https://www.googleapis.com/auth/userinfo.email",
+        # "https://www.googleapis.com/auth/userinfo.profile",
     ]

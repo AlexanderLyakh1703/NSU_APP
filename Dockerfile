@@ -1,8 +1,10 @@
 FROM python:3.10
 
-WORKDIR /home/app
+WORKDIR /home/nsu_app
 
-COPY app *.py requirements.txt ./
+COPY app/ ./app
+COPY .ssl/ ./.ssl
+COPY *.py .env requirements.txt ./
 RUN apt-get update
 RUN pip install -r requirements.txt
 

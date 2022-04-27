@@ -32,6 +32,7 @@ def login():
 
     # State is used to prevent CSRF, keep this for later.
     session["oauth_state"] = state
+    print(state)
     return redirect(authorization_url)
 
 
@@ -57,4 +58,9 @@ def callback():
 @main.route("/profile", methods=["GET"])
 def profile():
     service = get_auth(token=session["oauth_token"])
-    return jsonify(service.get("https://www.googleapis.com/oauth2/v1/userinfo").json())
+    return jsonify(
+        service.get(
+            "https://sso.nsu.ru/auth/realms/NSU/protocol/openid-connect/userinfo"
+        ).json()
+    )
+    # return jsonify(service.get("https://www.googleapis.com/oauth2/v1/userinfo").json())
