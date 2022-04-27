@@ -2,8 +2,7 @@ import json
 from base64 import b64encode
 from http.client import HTTPSConnection
 
-# login:password
-TABLE_TOKEN = b"SCFFAtHIAFhTa4HOBoAvOgqMDqq8uOBd_1648434328:"
+from config import api_config as aconf
 
 # разделы БД
 links = {
@@ -19,11 +18,11 @@ links = {
 }
 
 # type - раздел БД, search - параметры поиска
-def connect(type: str, search=dict()) -> list[dict]:
+def connect(type_: str, search=dict()) -> list[dict]:
 
     # заполнение данных дл авторизации
     connect = HTTPSConnection("table.nsu.ru")
-    userAndPass = b64encode(TABLE_TOKEN).decode("utf-8")
+    userAndPass = b64encode(aconf.TABLE_TOKEN).decode("utf-8")
     headers = {"Authorization": "Basic %s" % userAndPass}
 
     # собираем строку поиска

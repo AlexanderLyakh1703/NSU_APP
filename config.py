@@ -50,3 +50,7 @@ class oauth_config(object):
         # "https://www.googleapis.com/auth/userinfo.email",
         # "https://www.googleapis.com/auth/userinfo.profile",
     ]
+
+
+class api_config(object):
+    TABLE_TOKEN = os.getenv("TABLE_TOKEN")
