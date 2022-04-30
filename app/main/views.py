@@ -11,6 +11,12 @@ from . import main
 def index():
     return render_template("index.html")
 
+@main.route("/option")
+def option():
+    return render_template("Настройки.html") # rename files
+
+# also for any files
+
 
 def get_auth(state=None, token=None):
     if token:
