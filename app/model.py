@@ -42,15 +42,15 @@ class Order:
             # из-за оперированием id_time, а не time
             self.schedule[lesson.weekday][lesson.id_time] = lesson
 
-
-class Student:
+class User:
     def __init__(self, **kwargs):
-        self.id = id
-        self.id_group = id_group
-        self.id_faculty = id_faculty
-
-
-class Teacher:
-    def __init__(self, id, name):
-        self.id = id
-        # может ещё данные потребуются
+        self.openid = id
+        self.phone = id_group
+        self.offline_access = id_faculty
+        self.roles = roles
+        self.address = address
+        self.microprofile_jwt = microprofile_jwt
+        self.web_origins = web_origins
+        self.email = email
+        self.profile = profile
+        self.groups = groups
