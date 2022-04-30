@@ -35,8 +35,8 @@ class Order:
     def __init__(self, list_Of_Lesson: list[Lesson]):
 
         self.schedule = {lesson_.weekday: {
-                            lesson.id_time: lesson for lesson in list_Of_Lesson}
-                            for lesson_ in list_Of_Lesson}
+                        lesson.id_time: lesson for lesson in list_Of_Lesson}
+                        for lesson_ in list_Of_Lesson}
         # self.calendar = ... - это на будущее
 
 class User:
