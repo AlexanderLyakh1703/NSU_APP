@@ -55,6 +55,7 @@ def callback():
     # the token and show how this is done from a persisted token
     # in /profile.
     session["oauth_token"] = token
+    # session["user"] = User // type User (from model.py)
 
     return redirect(url_for("main.profile"))
 
