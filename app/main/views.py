@@ -12,18 +12,23 @@ def index():
     session["User"] = User() # make this in auth, please
     return render_template("index.html")
 
-@main.route("/option")
+@main.route("/settings")
 def option():
     # i will use super params User
 
-    return render_template("option.html") # rename files
+    return render_template("Settings.html") # rename files
 
-@main.route("/table")
+@main.route("/timetable")
 def table():
     # i will use super params User
     # even = api.table.connect()
-    return render_template("table.html") # rename files
+    return render_template("Timetable.html") # rename files
 
+@main.route("/orderBook")
+def table():
+    # i will use super params User
+    # even = api.table.connect()
+    return render_template("Order-Book.html") # rename files
 
 def get_auth(state=None, token=None):
     if token:
