@@ -20,7 +20,7 @@ links = {
 # type - раздел БД, search - параметры поиска
 def connect(type_: str, search=dict()) -> list[dict]:
 
-    # заполнение данных дл авторизации
+    # заполнение данных для авторизации
     connect = HTTPSConnection("table.nsu.ru")
     userAndPass = b64encode(aconf.TABLE_TOKEN).decode("utf-8")
     headers = {"Authorization": "Basic %s" % userAndPass}

@@ -4,7 +4,7 @@ from flask import (Flask, jsonify, redirect, render_template, request, session,
 from requests_oauthlib import OAuth2Session
 
 from . import main
-
+from . import api
 
 # @main.route("/")
 @main.route("/index")
@@ -13,9 +13,15 @@ def index():
 
 @main.route("/option")
 def option():
-    return render_template("Настройки.html") # rename files
+    # i will use super params User
 
-# also for any files
+    return render_template("option.html") # rename files
+
+@main.route("/table")
+def table():
+    # i will use super params User
+
+    return render_template("table.html") # rename files
 
 
 def get_auth(state=None, token=None):
