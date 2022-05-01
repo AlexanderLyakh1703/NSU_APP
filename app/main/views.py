@@ -14,15 +14,45 @@ def index():
 
 @main.route("/settings")
 def option():
-    # i will use super params User
+    # i will use super params User please
 
     return render_template("Settings.html") # rename files
 
 @main.route("/timetable")
 def table():
-    # i will use super params User
-    # even = api.table.connect()
-    return render_template("Timetable.html") # rename files
+    # get User from variable of session
+    User = session["User"]
+
+    # get the parity of the week
+    even = api.table.connect("parity")["actual"] # "odd" or "even"
+
+    if User.roles == "student":
+
+        # get id of group our User
+        id_group = api.table.connect("group",{"name":User.group})[0]["id"]
+
+        req_for_table = api.table.connect("schedule",{"id_group":id_group})
+
+        # make array of lessons
+        array_of_lessons = []
+
+        for row in req_for_lessons:
+            lesson = Lesson(row)
+            array_of_lessons.append(lesson)
+
+        order = Order(array_of_lessons)
+
+        return render_template("Timetable.html",order,even)
+
+    elif User.roles == "teacher":
+        # we must swap all lessons with different id_groups and equal other params
+        req_for_table = api.table.connect("schedule",{"id_teacher":id_teacher})
+
+        # we will present for teacher instead of teachername only list of group
+
+    elif User.roles == "combo":
+        pass
+        # it's combination of "teacher" ahd "student"
 
 @main.route("/orderBook")
 def table():

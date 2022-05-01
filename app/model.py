@@ -1,5 +1,5 @@
 class Lesson:
-    # параметры для поиска:
+    # параметры для поиска одной пары:
 
     # под преподавателем
     id_teacher: str
@@ -41,7 +41,7 @@ class Order:
 
 class User:
     def __init__(self, **kwargs):
-        self.openid = kwargs['openid']
+        # self.openid = kwargs['openid']
         self.phone = kwargs['phone']
         self.offline_access = kwargs['offline_access']
         self.roles = kwargs['roles']
@@ -49,5 +49,5 @@ class User:
         self.microprofile_jwt = kwargs['microprofile_jwt']
         self.web_origins = kwargs['web_origins']
         self.email = kwargs['email']
-        self.profile = kwargs['profile']
+        # self.profile = kwargs['profile'] - this atribute is being clarified
         self.groups = kwargs['groups']
