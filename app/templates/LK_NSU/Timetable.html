@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% set User = session["User"] %}
 <html style="font-size: 16px;">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,7 @@
     <meta name="page_type" content="np-template-header-footer-from-plugin">
     <title>Расписание</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/nicepage.css') }}" media="screen">
-<link rel="stylesheet" href=""{{ url_for('static', filename='css/Timetable.css') }}"" media="screen">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/Timetable.css') }}" media="screen">
     <script class="u-script" type="text/javascript" src="../jquery.js" defer=""></script>
     <script class="u-script" type="text/javascript" src="../nicepage.js" defer=""></script>
 
@@ -69,7 +70,16 @@
         <li data-u-target="#carousel_22ce" class="u-gradient u-shape-circle" style="width: 10px; height: 10px; background-image: linear-gradient(#b3b3b3, #54b686);" data-u-slide-to="5"></li>
       </ol>
       <div class="u-carousel-inner" role="listbox">
-        <div class="u-active u-align-center u-carousel-item u-clearfix u-section-1-1">
+
+      <!-- first-weekday - one writes -->
+      {% if even == "even" %}
+      {{ arr_weekday = list(range(1,7))+list(range(8,14)) }}
+      {% else %}
+      {{ arr_weekday = list(range(8,14))+list(range(1,7)) }}
+      {% endif %}
+      
+      {% for weekday in arr_weekday %}
+        <div class="u-active u-align-center u-carousel-item u-clearfix u-section-1-1"> <!-- next: u-section-1-2 -->
           <div class="u-clearfix u-sheet u-sheet-1">
             <div class="u-align-center-xs u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-table u-table-responsive u-table-1">
               <table class="u-table-entity u-table-entity-1">
@@ -88,169 +98,24 @@
                   </tr>
                 </thead>
                 <tbody class="u-align-center-xs u-custom-font u-gradient u-table-body u-table-body-1">
+
                   <tr style="height: 40px;">
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell u-table-cell-5">Время</td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Предмет</td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ауд.</td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Преподаватель</td>
                   </tr>
-                  <tr style="height: 61px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-9">9:00 10:35</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                  </tr>
+                  <!-- first weekday one-lesson -->
                   <tr style="height: 64px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-13">10:50<br>12:25
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Матан</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="#Карта" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-palette-1-base u-btn-1">2235</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell"> Исангулова<br>Д. В.
-                    </td>
+                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-9">9:00 10:35</td> <!-- u-table-cell-13 -->
+                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
+                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
+                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
                   </tr>
+
+                  <!-- first weekday second-lesson -->
                   <tr style="height: 64px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-17"> 12:40<br>14:15<br>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Алгебра</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.com/website-templates" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-palette-1-base u-btn-2">МА</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ревин Д. О.</td>
-                  </tr>
-                  <tr style="height: 64px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-21"> 14:30<br>16:05
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Алгебра</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.studio" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-palette-1-base u-btn-3">302</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ревин Д. О.</td>
-                  </tr>
-                  <tr style="height: 61px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-25">16:20<br>17:55
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ин. яз</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.cloud" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-4">5272</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ильина Т. И.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="u-align-center u-carousel-item u-clearfix u-section-1-2">
-          <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xl u-sheet-1">
-            <div class="u-align-center-xs u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-table u-table-responsive u-table-1">
-              <table class="u-table-entity u-table-entity-1">
-                <colgroup>
-                  <col width="39.26%">
-                  <col width="12.09%">
-                  <col width="2.17%">
-                  <col width="46.49%">
-                </colgroup>
-                <thead class="u-align-right-xs u-custom-font u-font-montserrat u-palette-2-base u-table-header u-table-header-1">
-                  <tr style="height: 56px;">
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell">ВТОРНИК</th>
-                  </tr>
-                </thead>
-                <tbody class="u-align-center-xs u-custom-font u-gradient u-table-body u-table-body-1">
-                  <tr style="height: 32px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell u-table-cell-5">Время</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Предмет</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ауд.</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Преподаватель</td>
-                  </tr>
-                  <tr style="height: 25px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-9">9:00<br>10:35
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Матан</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell u-table-cell-11">
-                      <a href="map/5252" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-1">5252</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Исангулова Д. В.</td>
-                  </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-13">10:50<br>12:25
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Матан</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="map/3107" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-2">3107</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Басалаев С. Г.</td>
-                  </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-17"> 12:40<br>14:15<br>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Прога</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="map/5220" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-3">5220</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Сидорова Е. А.</td>
-                  </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-21"> 14:30<br>16:05
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Прога</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="map/3230" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-4">3230</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Сидорова Е. А.</td>
-                  </tr>
-                  <tr style="height: 45px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-25">16:20<br>17:55
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ангем</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.cloud" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-5">2230</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Давлетшина В. Н</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="u-align-center u-carousel-item u-clearfix u-section-1-3">
-          <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xl u-sheet-1">
-            <div class="u-align-center-xs u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-table u-table-responsive u-table-1">
-              <table class="u-table-entity u-table-entity-1">
-                <colgroup>
-                  <col width="39.26%">
-                  <col width="12.09%">
-                  <col width="2.17%">
-                  <col width="46.49%">
-                </colgroup>
-                <thead class="u-align-right-xs u-custom-font u-font-montserrat u-palette-2-base u-table-header u-table-header-1">
-                  <tr style="height: 56px;">
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell">СРЕДА</th>
-                  </tr>
-                </thead>
-                <tbody class="u-align-center-xs u-custom-font u-gradient u-table-body u-table-body-1">
-                  <tr style="height: 32px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell u-table-cell-5">Время</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Предмет</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ауд.</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Преподаватель</td>
-                  </tr>
-                  <tr style="height: 29px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-9">9:00<br>10:35
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                  </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-13">10:50<br>12:25
+                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-13">10:50<br>12:25<br>
                     </td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Матан</td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
@@ -259,257 +124,15 @@
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell"> Исангулова<br>Д. В.
                     </td>
                   </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-17"> 12:40<br>14:15<br>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Алгебра</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.com/website-templates" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-palette-1-base u-btn-2">МА</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ревин Д. О.</td>
-                  </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-21"> 14:30<br>16:05
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Алгебра</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.studio" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-palette-1-base u-btn-3">302</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ревин Д. О.</td>
-                  </tr>
-                  <tr style="height: 45px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-25">16:20<br>17:55
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ин. яз</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.cloud" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-4">5272</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ильина Т. И.</td>
-                  </tr>
+
+
                 </tbody>
               </table>
             </div>
           </div>
         </div>
-        <div class="u-align-center u-carousel-item u-clearfix u-section-1-4">
-          <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xl u-sheet-1">
-            <div class="u-align-center-xs u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-table u-table-responsive u-table-1">
-              <table class="u-table-entity u-table-entity-1">
-                <colgroup>
-                  <col width="39.26%">
-                  <col width="12.09%">
-                  <col width="2.17%">
-                  <col width="46.49%">
-                </colgroup>
-                <thead class="u-align-right-xs u-custom-font u-font-montserrat u-palette-2-base u-table-header u-table-header-1">
-                  <tr style="height: 56px;">
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell">ЧЕТВЕРГ</th>
-                  </tr>
-                </thead>
-                <tbody class="u-align-center-xs u-custom-font u-gradient u-table-body u-table-body-1">
-                  <tr style="height: 32px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell u-table-cell-5">Время</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Предмет</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ауд.</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Преподаватель</td>
-                  </tr>
-                  <tr style="height: 29px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-9">9:00<br>10:35
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                  </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-13">10:50<br>12:25
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Матан</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="#Карта" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-palette-1-base u-btn-1">2235</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell"> Исангулова<br>Д. В.
-                    </td>
-                  </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-17"> 12:40<br>14:15<br>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Алгебра</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.com/website-templates" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-palette-1-base u-btn-2">МА</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ревин Д. О.</td>
-                  </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-21"> 14:30<br>16:05
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Алгебра</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.studio" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-palette-1-base u-btn-3">302</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ревин Д. О.</td>
-                  </tr>
-                  <tr style="height: 45px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-25">16:20<br>17:55
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ин. яз</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.cloud" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-4">5272</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ильина Т. И.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="u-align-center u-carousel-item u-clearfix u-section-1-5">
-          <div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-sm u-valign-middle-xl u-sheet-1">
-            <div class="u-align-center-xs u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-table u-table-responsive u-table-1">
-              <table class="u-table-entity u-table-entity-1">
-                <colgroup>
-                  <col width="39.26%">
-                  <col width="12.09%">
-                  <col width="2.17%">
-                  <col width="46.49%">
-                </colgroup>
-                <thead class="u-align-right-xs u-custom-font u-font-montserrat u-palette-2-base u-table-header u-table-header-1">
-                  <tr style="height: 56px;">
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell">ПЯТНИЦА</th>
-                  </tr>
-                </thead>
-                <tbody class="u-align-center-xs u-custom-font u-gradient u-table-body u-table-body-1">
-                  <tr style="height: 32px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell u-table-cell-5">Время</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Предмет</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ауд.</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Преподаватель</td>
-                  </tr>
-                  <tr style="height: 29px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-9">9:00&nbsp;<br>10:35
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                  </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-13">10:50<br>12:25
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Матан</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="#Карта" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-palette-1-base u-btn-1">2235</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell"> Исангулова<br>Д. В.
-                    </td>
-                  </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-17"> 12:40<br>14:15<br>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Алгебра</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.com/website-templates" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-palette-1-base u-btn-2">МА</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ревин Д. О.</td>
-                  </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-21"> 14:30<br>16:05
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Алгебра</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.studio" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-palette-1-base u-btn-3">302</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ревин Д. О.</td>
-                  </tr>
-                  <tr style="height: 45px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-25">16:20<br>17:55
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ин. яз</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.cloud" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-palette-1-base u-btn-4">5272</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ильина Т. И.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="u-align-center u-carousel-item u-clearfix u-section-1-6">
-          <div class="u-clearfix u-sheet u-sheet-1">
-            <div class="u-align-center-xs u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-table u-table-responsive u-table-1">
-              <table class="u-table-entity u-table-entity-1">
-                <colgroup>
-                  <col width="39.26%">
-                  <col width="12.09%">
-                  <col width="2.17%">
-                  <col width="46.49%">
-                </colgroup>
-                <thead class="u-align-right-xs u-custom-font u-font-montserrat u-palette-2-base u-table-header u-table-header-1">
-                  <tr style="height: 56px;">
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell"></th>
-                    <th class="u-table-cell">СУББОТА</th>
-                  </tr>
-                </thead>
-                <tbody class="u-align-center-xs u-custom-font u-gradient u-table-body u-table-body-1">
-                  <tr style="height: 32px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell u-table-cell-5">Время</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Предмет</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ауд.</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Преподаватель</td>
-                  </tr>
-                  <tr style="height: 29px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-9">9:00<br>10:35
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                  </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-13">10:50<br>12:25
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                  </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-17"> 12:40<br>14:15<br>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Физра</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.com/website-templates" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-palette-1-base u-btn-1">ФК</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Мальцев М. И.</td>
-                  </tr>
-                  <tr style="height: 68px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-21"> 14:30<br>16:05
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.studio" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-body-color u-btn-2">-</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                  </tr>
-                  <tr style="height: 45px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-25">16:20<br>17:55
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="https://nicepage.cloud" class="u-active-none u-border-none u-btn u-button-link u-button-style u-hover-none u-none u-text-body-color u-btn-3">-</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+
+      <!-- ALL END -->
       </div>
       <a class="u-absolute-vcenter-lg u-absolute-vcenter-md u-absolute-vcenter-sm u-absolute-vcenter-xl u-carousel-control u-carousel-control-prev u-text-grey-30 u-block-f31e-3" href="#carousel_22ce" role="button" data-u-slide="prev">
         <span aria-hidden="true">

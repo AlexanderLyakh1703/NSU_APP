@@ -3,6 +3,7 @@ from flask import (Flask, jsonify, redirect, render_template, request, session,
                    url_for)
 from requests_oauthlib import OAuth2Session
 
+import datetime
 from . import main
 from .. import api
 
@@ -42,7 +43,6 @@ def table():
 
         order = Order(array_of_lessons)
 
-        return render_template("Timetable.html",order=order,even=even)
 
     elif User.roles == "teacher":
 
@@ -50,11 +50,9 @@ def table():
         req_for_table = api.table.connect("schedule",{"id_teacher":id_teacher})
 
         # function for check equals of lessons
-        present = lambda write:[write["id_group"],
-                                write["weekday"],
+        present = lambda write:[write["weekday"],
                                 write["id_time"],
-                                write["id_teacher"],
-                                write["room"]]
+                                write["roomsokr"]]
 
         req_for_table.sort(key=present)
 
@@ -77,20 +75,25 @@ def table():
             else:
                 number_write += 1
 
-            # make array of lessons
-            array_of_lessons = []
+        # make array of lessons
+        array_of_lessons = []
 
-            for row in req_for_lessons:
-                lesson = Lesson(row)
-                array_of_lessons.append(lesson)
+        for row in req_for_lessons:
+            lesson = Lesson(row)
+            array_of_lessons.append(lesson)
 
-            order = Order(array_of_lessons)
-
-            return render_template("Timetable.html",order=order,even=even)
+        order = Order(array_of_lessons)
 
     elif User.roles == "combo":
         pass
         # it's combination of "teacher" ahd "student"
+        # i don't smt about this
+
+    else:
+        pass
+        # ERROR: I don't know your role...
+
+    return render_template("Timetable.html",table=order,even=even,weekday=datetime.datetime.today().weekday())
 
 @main.route("/orderBook")
 def table():
