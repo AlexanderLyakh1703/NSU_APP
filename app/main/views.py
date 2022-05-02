@@ -42,13 +42,51 @@ def table():
 
         order = Order(array_of_lessons)
 
-        return render_template("Timetable.html",order,even)
+        return render_template("Timetable.html",order=order,even=even)
 
     elif User.roles == "teacher":
+
         # we must swap all lessons with different id_groups and equal other params
         req_for_table = api.table.connect("schedule",{"id_teacher":id_teacher})
 
-        # we will present for teacher instead of teachername only list of group
+        # function for check equals of lessons
+        present = lambda write:[write["id_group"],
+                                write["weekday"],
+                                write["id_time"],
+                                write["id_teacher"],
+                                write["room"]]
+
+        req_for_table.sort(key=present)
+
+        number_write = 0
+
+        while number_write+1 < len(req_for_table):
+
+            this_write = req_for_table[number_write]
+            next_write = number_writes[number_write+1]
+
+            if present(this_write) == present(next_write):
+
+                    # i am writting here swap two objects
+                    if this_write['id_groups'] is list:
+                        this_write['id_groups'].append(next_write['id_groups'])
+                    else:
+                        this_write['id_groups'] = [this_write['id_groups'],
+                                                   next_write['id_groups'] ]
+                    del req_for_table[number_write+1]
+            else:
+                number_write += 1
+
+            # make array of lessons
+            array_of_lessons = []
+
+            for row in req_for_lessons:
+                lesson = Lesson(row)
+                array_of_lessons.append(lesson)
+
+            order = Order(array_of_lessons)
+
+            return render_template("Timetable.html",order=order,even=even)
 
     elif User.roles == "combo":
         pass

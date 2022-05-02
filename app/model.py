@@ -22,7 +22,11 @@ class Lesson:
         # чётность пары
         self.even = kwargs['even']
 
-        self.id_list_group = kwargs['id_groups']
+        if kwargs['id_groups'] is list:
+            self.id_list_group = kwargs['id_groups']
+        else:
+            self.id_list_group = [ kwargs['id_groups'] ]
+
         self.id_time = kwargs['id_time']
         self.room = kwargs['room']
 
