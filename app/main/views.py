@@ -93,7 +93,7 @@ def table():
         pass
         # ERROR: I don't know your role...
 
-    return render_template("Timetable.html",table=order,even=even,weekday=datetime.datetime.today().weekday())
+    return render_template("Timetable.html",table=order,even=even,weekday=datetime.datetime.today().weekday()+1)
 
 @main.route("/orderBook")
 def table():

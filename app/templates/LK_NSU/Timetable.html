@@ -73,13 +73,19 @@
 
       <!-- first-weekday - one writes -->
       {% if even == "even" %}
-      {{ arr_weekday = list(range(1,7))+list(range(8,14)) }}
+      {{ set arr_weekday = list(range(1,7))+list(range(8,14)) }}
       {% else %}
-      {{ arr_weekday = list(range(8,14))+list(range(1,7)) }}
+      {{ set arr_weekday = list(range(8,14))+list(range(1,7)) }}
       {% endif %}
-      
+
+      {% set count = 1 %}
+
+      {{ arr_weekday = arr_weekday[weekday-1::]+arr_weekday[:weekday-1:] }}
       {% for weekday in arr_weekday %}
-        <div class="u-active u-align-center u-carousel-item u-clearfix u-section-1-1"> <!-- next: u-section-1-2 -->
+      {% set weekday_alpha = {0:"ВОСКРЕСЕНЬЕ",1:"ПОНЕДЕЛЬНИК",2:"ВТОРНИК",3:"СРЕДА",
+                              4:"ЧЕТВЕРГ",5:"ПЯТНИЦА",6:"СУББОТА"}[weekday%7] %}
+        <div class="u-active u-align-center u-carousel-item u-clearfix u-section-1-{{count}}"> <!-- next: u-section-1-2 -->
+          {{ count += 1}}
           <div class="u-clearfix u-sheet u-sheet-1">
             <div class="u-align-center-xs u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-table u-table-responsive u-table-1">
               <table class="u-table-entity u-table-entity-1">
@@ -94,20 +100,21 @@
                     <th class="u-table-cell"></th>
                     <th class="u-table-cell"></th>
                     <th class="u-table-cell"></th>
-                    <th class="u-table-cell">ПОНЕДЕЛЬНИК</th>
+                    <th class="u-table-cell">{{weekday_alpha}}</th>
                   </tr>
                 </thead>
                 <tbody class="u-align-center-xs u-custom-font u-gradient u-table-body u-table-body-1">
-
                   <tr style="height: 40px;">
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell u-table-cell-5">Время</td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Предмет</td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ауд.</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Преподаватель</td>
+                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">{{ "Преподаватель" if User.roles == "teacher" else "Группы" }}</td>
                   </tr>
+                  {% for time in range(1,8) %}
+                    {% if %}
                   <!-- first weekday one-lesson -->
                   <tr style="height: 64px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-9">9:00 10:35</td> <!-- u-table-cell-13 -->
+                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-{{ 9+(time-1)*4 }}">table.schedule[weekday][time] <- дальше очевидно, нужно только добавить проверки на ключи </td> <!-- u-table-cell-13 -->
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
@@ -127,13 +134,14 @@
 
 
                 </tbody>
+                {% endfor %}
               </table>
             </div>
           </div>
         </div>
-
-      <!-- ALL END -->
+        {% endfor %}
       </div>
+      <!-- ALL END -->
       <a class="u-absolute-vcenter-lg u-absolute-vcenter-md u-absolute-vcenter-sm u-absolute-vcenter-xl u-carousel-control u-carousel-control-prev u-text-grey-30 u-block-f31e-3" href="#carousel_22ce" role="button" data-u-slide="prev">
         <span aria-hidden="true">
           <svg viewBox="0 0 477.175 477.175"><path d="M145.188,238.575l215.5-215.5c5.3-5.3,5.3-13.8,0-19.1s-13.8-5.3-19.1,0l-225.1,225.1c-5.3,5.3-5.3,13.8,0,19.1l225.1,225
