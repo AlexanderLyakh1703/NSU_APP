@@ -78,14 +78,15 @@
       {{ set arr_weekday = list(range(8,14))+list(range(1,7)) }}
       {% endif %}
 
-      {% set count = 1 %}
+      {% set count_of_weekday = 1 %}
 
       {{ arr_weekday = arr_weekday[weekday-1::]+arr_weekday[:weekday-1:] }}
       {% for weekday in arr_weekday %}
+
       {% set weekday_alpha = {0:"ВОСКРЕСЕНЬЕ",1:"ПОНЕДЕЛЬНИК",2:"ВТОРНИК",3:"СРЕДА",
                               4:"ЧЕТВЕРГ",5:"ПЯТНИЦА",6:"СУББОТА"}[weekday%7] %}
-        <div class="u-active u-align-center u-carousel-item u-clearfix u-section-1-{{count}}"> <!-- next: u-section-1-2 -->
-          {{ count += 1}}
+        <div class="u-active u-align-center u-carousel-item u-clearfix u-section-1-{{count_of_weekday}}"> <!-- next: u-section-1-2 -->
+
           <div class="u-clearfix u-sheet u-sheet-1">
             <div class="u-align-center-xs u-expanded-width-lg u-expanded-width-md u-expanded-width-sm u-expanded-width-xl u-expanded-width-xs u-table u-table-responsive u-table-1">
               <table class="u-table-entity u-table-entity-1">
@@ -110,35 +111,47 @@
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ауд.</td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">{{ "Преподаватель" if User.roles == "teacher" else "Группы" }}</td>
                   </tr>
+              {% if weekday in table.schedule %}
+
                   {% for time in range(1,8) %}
-                    {% if %}
-                  <!-- first weekday one-lesson -->
+
+                      {% if time in table.schedule[weekday] %}
+                        {% set output_lesson = table.schedule[weekday][time].presentation() %}
+                        <tr style="height: 64px;">
+                          <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-{{ 9+(time-1)*4 }}">{{ output_lesson["time"]["begin"] }}<br>{{ output_lesson["time"]["end"] }}</td>
+                          <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">{{ output_lesson["name"] }}</td>
+                          <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
+                            <a href="#Карта" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-palette-1-base u-btn-1">{{ output_lesson["room"] }}</a></td>
+                            <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">{{ '<br>'.join( list(output_lesson["teacher"].split(' ',1)) ) if User.roles == "teacher" else ' '.join(output_lesson["groups"]) }}</td>
+                        </tr>
+
+                      {% else %}
+                        <tr style="height: 64px;">
+                          <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-{{ 9+(time-1)*4 }}">-</td>
+                          <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
+                          <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
+                          <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
+                        </tr>
+                      {% endif %}
+
+                  {% endfor %}
+
+              {% else %}
+                  {% for time in range(1,8) %}
                   <tr style="height: 64px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-{{ 9+(time-1)*4 }}">table.schedule[weekday][time] <- дальше очевидно, нужно только добавить проверки на ключи </td> <!-- u-table-cell-13 -->
+                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-{{ 9+(time-1)*4 }}">-</td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">-</td>
                   </tr>
-
-                  <!-- first weekday second-lesson -->
-                  <tr style="height: 64px;">
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-13">10:50<br>12:25<br>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Матан</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">
-                      <a href="#Карта" class="u-active-none u-border-none u-btn u-button-link u-button-style u-dialog-link u-hover-none u-none u-text-palette-1-base u-btn-1">2235</a>
-                    </td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell"> Исангулова<br>Д. В.
-                    </td>
-                  </tr>
-
-
+                  {% endfor %}
+              {% endif %}
                 </tbody>
-                {% endfor %}
               </table>
             </div>
           </div>
         </div>
+        {{ count_of_weekday += 1 }}
         {% endfor %}
       </div>
       <!-- ALL END -->

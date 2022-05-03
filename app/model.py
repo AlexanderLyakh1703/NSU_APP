@@ -47,6 +47,9 @@ class Lesson:
 
         request_for_time = connect("time",{"id":self.id_time})[0]
 
+        fast_lesson_name = connect("schedule",{"id_teacher":self.id_teacher,
+                                        "id_time":self.id_time,"weekday":self.weekday})["namesokr"]
+
         time_name = {"begin":request_for_time["begin"],
                      "end":request_for_time["end"]}
         room_name = self.room
@@ -54,7 +57,7 @@ class Lesson:
         return {"teacher":teacher_name,"type":type_lesson,
                 "weekday":weekday_name,"even":even_name,
                 "groups":list_group_names,"time":time_name,
-                "room":room_name}
+                "room":room_name,"name":fast_lesson_name}
 
 
 # Order.shedule[weekday][time]
