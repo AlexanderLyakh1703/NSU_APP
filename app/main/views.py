@@ -15,6 +15,8 @@ def index():
 
 @main.route("/settings")
 def option():
+    # i needed design from Vova Bobenko!!!
+    
     # i will use super params User please
 
     return render_template("Settings.html") # rename files
@@ -96,7 +98,9 @@ def table():
     return render_template("Timetable.html",table=order,even=even,weekday=datetime.datetime.today().weekday()+1)
 
 @main.route("/orderBook")
-def table():
+def orderBook():
+    # I needed API !!!!!! for cab.nsu.ru
+
     # i will use super params User
     # even = api.table.connect()
     return render_template("Order-Book.html") # rename files
