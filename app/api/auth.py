@@ -34,7 +34,7 @@ def get_userinfo(token):
     req_data = service.get(
         "https://sso.nsu.ru/auth/realms/NSU/protocol/openid-connect/userinfo"
     ).json()
-    req_data["groups"] = {
-        (t := g.rsplit("/", 2)[1:])[0]: t[1] for g in req_data["groups"]
-    }
+    # req_data["groups"] = {
+    #     (t := g.rsplit("/", 2)[1:])[0]: t[1] for g in req_data["groups"]
+    # }
     return req_data
