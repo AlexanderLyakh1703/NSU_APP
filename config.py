@@ -23,7 +23,9 @@ class config(object):
     BASIC_AUTH_PASSWORD = os.getenv("ADMIN_PASSWORD") or "admin"
 
     SESSION_PERMANENT = True
-    SESSION_TYPE = 'filesystem'
+    SESSION_TYPE = "filesystem"
+    SESSION_FILE_DIR = ".flask_session"
+
 
 class production_config(config):
     DEBUG = False
