@@ -129,6 +129,6 @@ def callback():
 
 @main.route("/profile", methods=["GET"])
 def profile():
-    session["userinfo"] = auth.get_userinfo(session["oauth_token"])
+    session["userinfo"] = auth.get_userinfo(session.get("oauth_token"))
     session.modified = True
     return jsonify(session["userinfo"])
