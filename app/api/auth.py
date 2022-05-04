@@ -1,5 +1,4 @@
 from config import oauth_config as auconf
-from flask import session
 from requests_oauthlib import OAuth2Session
 
 
@@ -17,39 +16,25 @@ def get_auth(state=None, token=None):
 
 def authorization():
     service = get_auth()
-    authorization_url, state = service.authorization_url(auconf.AUTH_BASE_URL)
-
-    # State is used to prevent CSRF, keep this for later.
-    session["oauth_state"] = state
-    session.modified = True
-    return authorization_url
+    return service.authorization_url(auconf.AUTH_BASE_URL)
 
 
-def get_token(auth_url):
-    service = get_auth(state=session["oauth_state"])
+def get_token(state, auth_url):
+    service = get_auth(state=state)
     token = service.fetch_token(
         auconf.TOKEN_URL,
         client_secret=auconf.CLIENT_SECRET,
         authorization_response=auth_url,
     )
-    session["oauth_token"] = token
-    session.modified = True
     return token
 
 
-def get_userinfo():
-    service = get_auth(token=session["oauth_token"])
+def get_userinfo(token):
+    service = get_auth(token=token)
     req_data = service.get(
         "https://sso.nsu.ru/auth/realms/NSU/protocol/openid-connect/userinfo"
     ).json()
     req_data["groups"] = {
         (t := g.rsplit("/", 2)[1:])[0]: t[1] for g in req_data["groups"]
     }
-    session["userinfo"] = req_data
-    session.modified = True
     return req_data
-
-
-# dsuhoi will make it
-def get_user_data():
-    pass

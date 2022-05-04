@@ -1,9 +1,6 @@
 import datetime
 
-from config import oauth_config as auconf
-from flask import (Flask, jsonify, redirect, render_template, request, session,
-                   url_for)
-from requests_oauthlib import OAuth2Session
+from flask import jsonify, redirect, render_template, request, session, url_for
 
 from ..api import auth, table
 from . import main
@@ -12,7 +9,6 @@ from . import main
 # @main.route("/")
 @main.route("/index")
 def index():
-    session["User"] = User()  # make this in auth, please
     return render_template("index.html")
 
 
@@ -118,16 +114,21 @@ def orderBook():
 @main.route("/")
 @main.route("/login")
 def login():
-    return redirect(auth.authorization())
+    auth_url, state = auth.authorization()
+    session["oauth_state"] = state
+    session.modified = True
+    return redirect(auth_url)
 
 
 @main.route("/callback", methods=["GET"])
 def callback():
-    auth.get_token(request.url)
+    session["oauth_token"] = auth.get_token(session.get("oauth_state"), request.url)
+    session.modified = True
     return redirect(url_for("main.profile"))
 
 
 @main.route("/profile", methods=["GET"])
 def profile():
-    auth.get_userinfo()
+    session["userinfo"] = auth.get_userinfo(session["oauth_token"])
+    session.modified = True
     return jsonify(session["userinfo"])
