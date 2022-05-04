@@ -1,8 +1,10 @@
 import datetime
 
+from config import oauth_config as auconf
 from flask import jsonify, redirect, render_template, request, session, url_for
+from requests_oauthlib import OAuth2Session
 
-from ..api import auth, table
+from ..api import table
 from . import main
 
 
@@ -111,24 +113,56 @@ def orderBook():
     return render_template("Order-Book.html")  # rename files
 
 
+def get_auth(state=None, token=None):
+    if token:
+        return OAuth2Session(auconf.CLIENT_ID, token=token)
+    if state:
+        return OAuth2Session(
+            auconf.CLIENT_ID, state=state, redirect_uri=auconf.REDIRECT_URI
+        )
+    return OAuth2Session(
+        auconf.CLIENT_ID, redirect_uri=auconf.REDIRECT_URI, scope=auconf.SCOPE
+    )
+
+
 @main.route("/")
 @main.route("/login")
 def login():
-    auth_url, state = auth.authorization()
+    service = get_auth()
+    authorization_url, state = service.authorization_url(auconf.AUTH_BASE_URL)
+
+    # State is used to prevent CSRF, keep this for later.
     session["oauth_state"] = state
-    session.modified = True
-    return redirect(auth_url)
+    return redirect(authorization_url)
 
 
 @main.route("/callback", methods=["GET"])
 def callback():
-    session["oauth_token"] = auth.get_token(session.get("oauth_state"), request.url)
-    session.modified = True
+    print(request.url)
+    service = get_auth(state=session["oauth_state"])
+    token = service.fetch_token(
+        auconf.TOKEN_URL,
+        client_secret=auconf.CLIENT_SECRET,
+        authorization_response=request.url,
+    )
+
+    # At this point you can fetch protected resources but lets save
+    # the token and show how this is done from a persisted token
+    # in /profile.
+    session["oauth_token"] = token
+    # session["user"] = User // type User (from model.py)
+
     return redirect(url_for("main.profile"))
 
 
 @main.route("/profile", methods=["GET"])
 def profile():
-    session["userinfo"] = auth.get_userinfo(session.get("oauth_token"))
-    session.modified = True
-    return jsonify(session["userinfo"])
+    service = get_auth(token=session["oauth_token"])
+    req_data = service.get(
+        "https://sso.nsu.ru/auth/realms/NSU/protocol/openid-connect/userinfo"
+    ).json()
+    req_data["groups"] = {
+        (t := g.rsplit("/", 2)[1:])[0]: t[1] for g in req_data["groups"]
+    }
+    session["userinfo"] = req_data
+    return jsonify(req_data)
