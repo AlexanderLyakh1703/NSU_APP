@@ -123,7 +123,7 @@ def login():
 
 @main.route("/callback", methods=["GET"])
 def callback():
-    auth.get_token()
+    auth.get_token(request.url)
     return redirect(url_for("main.profile"))
 
 

@@ -24,12 +24,12 @@ def authorization():
     return authorization_url
 
 
-def get_token():
+def get_token(auth_url):
     service = get_auth(state=session["oauth_state"])
     token = service.fetch_token(
         auconf.TOKEN_URL,
         client_secret=auconf.CLIENT_SECRET,
-        authorization_response=request.url,
+        authorization_response=auth_url,
     )
     session["oauth_token"] = token
     return token
