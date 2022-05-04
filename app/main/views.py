@@ -4,7 +4,7 @@ from ..api import auth
 from . import main
 
 
-# @main.route("/")
+@main.route("/")
 @main.route("/index")
 def index():
     return render_template("index.html")
@@ -22,7 +22,6 @@ def get_auth(state=None, token=None):
     )
 
 
-@main.route("/")
 @main.route("/login")
 def login():
     return redirect(auth.authorization())
