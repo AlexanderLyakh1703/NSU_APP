@@ -150,9 +150,11 @@ def callback():
 @main.route("/profile", methods=["GET"])
 def profile():
     service = get_auth(token=session["oauth_token"])
-    return jsonify(
-        service.get(
-            "https://sso.nsu.ru/auth/realms/NSU/protocol/openid-connect/userinfo"
-        ).json()
-    )
-    # return jsonify(service.get("https://www.googleapis.com/oauth2/v1/userinfo").json())
+    req_data = service.get(
+        "https://sso.nsu.ru/auth/realms/NSU/protocol/openid-connect/userinfo"
+    ).json()
+    req_data["groups"] = {
+        (t := g.rsplit("/", 2)[1:])[0]: t[1] for g in req_data["groups"]
+    }
+    session["userinfo"] = req_data
+    return jsonify(req_data)
