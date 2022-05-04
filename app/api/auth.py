@@ -21,6 +21,7 @@ def authorization():
 
     # State is used to prevent CSRF, keep this for later.
     session["oauth_state"] = state
+    session.modified = True
     return authorization_url
 
 
@@ -32,6 +33,7 @@ def get_token(auth_url):
         authorization_response=auth_url,
     )
     session["oauth_token"] = token
+    session.modified = True
     return token
 
 
@@ -44,6 +46,7 @@ def get_userinfo():
         (t := g.rsplit("/", 2)[1:])[0]: t[1] for g in req_data["groups"]
     }
     session["userinfo"] = req_data
+    session.modified = True
     return req_data
 
 
