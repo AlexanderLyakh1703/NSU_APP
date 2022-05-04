@@ -1,7 +1,6 @@
-from config import oauth_config as auconf
 from flask import jsonify, redirect, render_template, request, session, url_for
-from requests_oauthlib import OAuth2Session
 
+from ..api import auth
 from . import main
 
 
@@ -26,37 +25,17 @@ def get_auth(state=None, token=None):
 @main.route("/")
 @main.route("/login")
 def login():
-    service = get_auth()
-    authorization_url, state = service.authorization_url(auconf.AUTH_BASE_URL)
-
-    # State is used to prevent CSRF, keep this for later.
-    session["oauth_state"] = state
-    return redirect(authorization_url)
+    return redirect(auth.authorization())
 
 
 @main.route("/callback", methods=["GET"])
 def callback():
-    print(request.url)
-    service = get_auth(state=session["oauth_state"])
-    token = service.fetch_token(
-        auconf.TOKEN_URL,
-        client_secret=auconf.CLIENT_SECRET,
-        authorization_response=request.url,
-    )
-
-    session["oauth_token"] = token
+    auth.get_token(request.url)
 
     return redirect(url_for("main.profile"))
 
 
 @main.route("/profile", methods=["GET"])
 def profile():
-    service = get_auth(token=session["oauth_token"])
-    req_data = service.get(
-        "https://sso.nsu.ru/auth/realms/NSU/protocol/openid-connect/userinfo"
-    ).json()
-    req_data["groups"] = {
-        (t := g.rsplit("/", 2)[1:])[0]: t[1] for g in req_data["groups"]
-    }
-    session["userinfo"] = req_data
-    return jsonify(req_data)
+    auth.get_userinfo()
+    return jsonify(session.get("userinfo"))
