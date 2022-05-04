@@ -1,25 +1,29 @@
+import datetime
+
 from config import oauth_config as auconf
 from flask import (Flask, jsonify, redirect, render_template, request, session,
                    url_for)
 from requests_oauthlib import OAuth2Session
 
-import datetime
+from ..api import auth, table
 from . import main
-from .. import api
+
 
 # @main.route("/")
 @main.route("/index")
 def index():
-    session["User"] = User() # make this in auth, please
+    session["User"] = User()  # make this in auth, please
     return render_template("index.html")
+
 
 @main.route("/settings")
 def option():
     # i needed design from Vova Bobenko!!!
-    
+
     # i will use super params User please
 
-    return render_template("Settings.html") # rename files
+    return render_template("Settings.html")  # rename files
+
 
 @main.route("/timetable")
 def table():
@@ -27,14 +31,14 @@ def table():
     User = session["User"]
 
     # get the parity of the week
-    even = api.table.connect("parity")["actual"] # "odd" or "even"
+    even = table.connect("parity")["actual"]  # "odd" or "even"
 
     if User.roles == "student":
 
         # get id of group our User
-        id_group = api.table.connect("group",{"name":User.group})[0]["id"]
+        id_group = table.connect("group", {"name": User.group})[0]["id"]
 
-        req_for_table = api.table.connect("schedule",{"id_group":id_group})
+        req_for_table = table.connect("schedule", {"id_group": id_group})
 
         # make array of lessons
         array_of_lessons = []
@@ -45,35 +49,34 @@ def table():
 
         order = Order(array_of_lessons)
 
-
     elif User.roles == "teacher":
 
         # we must swap all lessons with different id_groups and equal other params
-        req_for_table = api.table.connect("schedule",{"id_teacher":id_teacher})
+        req_for_table = table.connect("schedule", {"id_teacher": id_teacher})
 
         # function for check equals of lessons
-        present = lambda write:[write["weekday"],
-                                write["id_time"],
-                                write["roomsokr"]]
+        present = lambda write: [write["weekday"], write["id_time"], write["roomsokr"]]
 
         req_for_table.sort(key=present)
 
         number_write = 0
 
-        while number_write+1 < len(req_for_table):
+        while number_write + 1 < len(req_for_table):
 
             this_write = req_for_table[number_write]
-            next_write = number_writes[number_write+1]
+            next_write = number_writes[number_write + 1]
 
             if present(this_write) == present(next_write):
 
-                    # i am writting here swap two objects
-                    if this_write['id_groups'] is list:
-                        this_write['id_groups'].append(next_write['id_groups'])
-                    else:
-                        this_write['id_groups'] = [this_write['id_groups'],
-                                                   next_write['id_groups'] ]
-                    del req_for_table[number_write+1]
+                # i am writting here swap two objects
+                if isinstance(his_write["id_groups"], list):
+                    this_write["id_groups"].append(next_write["id_groups"])
+                else:
+                    this_write["id_groups"] = [
+                        this_write["id_groups"],
+                        next_write["id_groups"],
+                    ]
+                del req_for_table[number_write + 1]
             else:
                 number_write += 1
 
@@ -95,7 +98,13 @@ def table():
         pass
         # ERROR: I don't know your role...
 
-    return render_template("Timetable.html",table=order,even=even,weekday=datetime.datetime.today().weekday()+1)
+    return render_template(
+        "Timetable.html",
+        table=order,
+        even=even,
+        weekday=datetime.datetime.today().weekday() + 1,
+    )
+
 
 @main.route("/orderBook")
 def orderBook():
@@ -103,58 +112,22 @@ def orderBook():
 
     # i will use super params User
     # even = api.table.connect()
-    return render_template("Order-Book.html") # rename files
-
-def get_auth(state=None, token=None):
-    if token:
-        return OAuth2Session(auconf.CLIENT_ID, token=token)
-    if state:
-        return OAuth2Session(
-            auconf.CLIENT_ID, state=state, redirect_uri=auconf.REDIRECT_URI
-        )
-    return OAuth2Session(
-        auconf.CLIENT_ID, redirect_uri=auconf.REDIRECT_URI, scope=auconf.SCOPE
-    )
+    return render_template("Order-Book.html")  # rename files
 
 
 @main.route("/")
 @main.route("/login")
 def login():
-    service = get_auth()
-    authorization_url, state = service.authorization_url(auconf.AUTH_BASE_URL)
-
-    # State is used to prevent CSRF, keep this for later.
-    session["oauth_state"] = state
-    return redirect(authorization_url)
+    return redirect(auth.authorization())
 
 
 @main.route("/callback", methods=["GET"])
 def callback():
-    print(request.url)
-    service = get_auth(state=session["oauth_state"])
-    token = service.fetch_token(
-        auconf.TOKEN_URL,
-        client_secret=auconf.CLIENT_SECRET,
-        authorization_response=request.url,
-    )
-
-    # At this point you can fetch protected resources but lets save
-    # the token and show how this is done from a persisted token
-    # in /profile.
-    session["oauth_token"] = token
-    # session["user"] = User // type User (from model.py)
-
+    auth.get_token()
     return redirect(url_for("main.profile"))
 
 
 @main.route("/profile", methods=["GET"])
 def profile():
-    service = get_auth(token=session["oauth_token"])
-    req_data = service.get(
-        "https://sso.nsu.ru/auth/realms/NSU/protocol/openid-connect/userinfo"
-    ).json()
-    req_data["groups"] = {
-        (t := g.rsplit("/", 2)[1:])[0]: t[1] for g in req_data["groups"]
-    }
-    session["userinfo"] = req_data
-    return jsonify(req_data)
+    auth.get_userinfo()
+    return jsonify(session["userinfo"])
