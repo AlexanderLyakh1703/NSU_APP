@@ -22,6 +22,8 @@ class config(object):
     BASIC_AUTH_USERNAME = "admin"
     BASIC_AUTH_PASSWORD = os.getenv("ADMIN_PASSWORD") or "admin"
 
+    SESSION_PERMANENT = True
+    SESSION_TYPE = 'filesystem'
 
 class production_config(config):
     DEBUG = False
