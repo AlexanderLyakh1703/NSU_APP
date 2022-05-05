@@ -21,6 +21,12 @@ def get_auth(state=None, token=None):
         auconf.CLIENT_ID, redirect_uri=auconf.REDIRECT_URI, scope=auconf.SCOPE
     )
 
+@main.route("/timetable")
+def timetable():
+
+    # magic
+
+    return render_template("options/Timetable.html")
 
 @main.route("/login")
 def login():
