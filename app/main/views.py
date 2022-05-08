@@ -29,7 +29,7 @@ def timetable():
                         table = dict_of_vars['timetable'],
                         even = dict_of_vars['even'],
                         weekday = dict_of_vars['weekday'],
-                        roles = dict_of_vars['weekday'] )
+                        roles = dict_of_vars['roles'] )
 
 @main.route("/login")
 def login():
