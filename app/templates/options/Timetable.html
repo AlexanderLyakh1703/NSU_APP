@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-{% set User = session["User"] %}
 <html style="font-size: 16px;">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -109,7 +108,7 @@
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell u-table-cell-5">Время</td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Предмет</td>
                     <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">Ауд.</td>
-                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">{{ "Преподаватель" if User.roles == "teacher" else "Группы" }}</td>
+                    <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">{{ "Преподаватель" if roles == "student" else "Группы" }}</td>
                   </tr>
               {% if weekday in table.schedule %}
 

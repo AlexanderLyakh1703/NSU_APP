@@ -72,15 +72,15 @@ class Order:
                         for lesson_ in list_Of_Lesson}
         # self.calendar = ... - это на будущее
 
-class User:
-    def __init__(self, **kwargs):
-        # self.openid = kwargs['openid']
-        self.phone = kwargs['phone']
-        self.offline_access = kwargs['offline_access']
-        self.roles = kwargs['roles']
-        self.address = kwargs['address']
-        self.microprofile_jwt = kwargs['microprofile_jwt']
-        self.web_origins = kwargs['web_origins']
-        self.email = kwargs['email']
-        # self.profile = kwargs['profile'] - this atribute is being clarified
-        self.groups = kwargs['groups']
+# class User:
+#     def __init__(self, **kwargs):
+#         # self.openid = kwargs['openid']
+#         self.phone = kwargs['phone']
+#         self.offline_access = kwargs['offline_access']
+#         self.roles = kwargs['roles']
+#         self.address = kwargs['address']
+#         self.microprofile_jwt = kwargs['microprofile_jwt']
+#         self.web_origins = kwargs['web_origins']
+#         self.email = kwargs['email']
+#         # self.profile = kwargs['profile'] - this atribute is being clarified
+#         self.groups = kwargs['groups']

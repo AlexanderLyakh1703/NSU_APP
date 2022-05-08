@@ -3,7 +3,14 @@ from base64 import b64encode
 from http.client import HTTPSConnection
 
 from config import api_config as aconf
+from flask import session
 
+from datetime import datetime
+
+# импоритруем модели
+from model import Order, Lesson
+
+# -----------------------------------------------------------------------------
 # разделы БД
 links = {
     "faculty": "/api/faculties",
@@ -42,77 +49,103 @@ def connect(type_: str, search=dict()) -> list[dict]:
 
 # example: print(connect("faculty",{"id":"1"}))
 
-def info_for_Timetable():
+
+# function for sortings and check lessons
+def check_for_equals(write :dict()):
+    return [ write["weekday"], write["id_time"] ]
+
+# объединяем пары с одинаковым днём недели, временем и преподавателем
+def union_of_lessons_by_groups(request_for_timetable :list[dict]): # for teachers
+
+    request_for_timetable.sort(key=check_for_equals)
+
+    number_write = 0
+
+    while number_write+1 < len(request_for_timetable):
+
+        this_write = request_for_timetable[number_write]
+        next_write = number_writes[number_write+1]
+
+        if present(this_write) == present(next_write):
+
+                # i am writting here swap two objects
+                if this_write['id_groups'] is list:
+                    this_write['id_groups'].append(next_write['id_groups'])
+                else:
+                    this_write['id_groups'] = [this_write['id_groups'],
+                                               next_write['id_groups'] ]
+                del request_for_timetable[number_write+1]
+        else:
+            number_write += 1
+
+    # make array of lessons
+    array_of_lessons = []
+
+    for row in req_for_lessons:
+        lesson = Lesson(row)
+        array_of_lessons.append(lesson)
+
+    order = Order(array_of_lessons)
+
+    return order
+
+# получаем роль студент/преподаватель
+def get_roles(user):
+
+    fullname = ' '.join(list(user['name'].split()[::-1]
+                                + [user['middlename']]))
+
+    # не, тут явно уязвимость, т. к. люди с одинаковым ФИО будут учителями
+    id_teacher = connect("teacher",{'fullname':fullname})
+
+    # есть ровно ОДНА запись с таким fullname И есть он НЕ бакалавр
+    if len(id_teacher) == 1 and user['groups']['StudentCourses'].split('_')[-1] != 'bac':
+        roles = 'teacher'
+    else:
+        roles = 'student'
+
+    return roles
+
+# конвертируем массив словарей в тип данных order
+def convert(list_of_dicts :list[dict]):
+
+    array_of_lessons = []
+
+    for elem in list_of_dicts:
+        array_of_lessons.append(Lesson(elem))
+
+    order = Order(array_of_lessons)
+
+    return order
+
+
+def info_for_Timetable(session):
     # get User from variable of session
-    User = session["User"]
+    user = session["userinfo"]
 
     # get the parity of the week
-    even = api.table.connect("parity")["actual"] # "odd" or "even"
+    even = connect("parity")["actual"] # "odd" or "even"
 
-    if User.roles == "student":
-
-        # get id of group our User
-        id_group = api.table.connect("group",{"name":User.group})[0]["id"]
-
-        req_for_table = api.table.connect("schedule",{"id_group":id_group})
-
-        # make array of lessons
-        array_of_lessons = []
-
-        for row in req_for_lessons:
-            lesson = Lesson(row)
-            array_of_lessons.append(lesson)
-
-        order = Order(array_of_lessons)
+    weekday = datetime.today().weekday()+1 # value from {1,...,7}
 
 
-    elif User.roles == "teacher":
+    roles = get_roles(user)
 
-        # we must swap all lessons with different id_groups and equal other params
-        req_for_table = api.table.connect("schedule",{"id_teacher":id_teacher})
 
-        # function for check equals of lessons
-        present = lambda write:[write["weekday"],
-                                write["id_time"],
-                                write["roomsokr"]]
+    if roles == 'student':
 
-        req_for_table.sort(key=present)
+        id_group = connect("group",{'name':group})[0]['id']
 
-        number_write = 0
+        timetable = connect("schedule",{'id_group':id_group})
 
-        while number_write+1 < len(req_for_table):
+        order = convert(timetable)
 
-            this_write = req_for_table[number_write]
-            next_write = number_writes[number_write+1]
+    else: # roles = 'teacher'
 
-            if present(this_write) == present(next_write):
+        timetable = connect("schedule",{'id_teacher':id_teacher})
+        order = convert(union_of_lessons_by_groups(timetable))
 
-                    # i am writting here swap two objects
-                    if this_write['id_groups'] is list:
-                        this_write['id_groups'].append(next_write['id_groups'])
-                    else:
-                        this_write['id_groups'] = [this_write['id_groups'],
-                                                   next_write['id_groups'] ]
-                    del req_for_table[number_write+1]
-            else:
-                number_write += 1
 
-        # make array of lessons
-        array_of_lessons = []
 
-        for row in req_for_lessons:
-            lesson = Lesson(row)
-            array_of_lessons.append(lesson)
-
-        order = Order(array_of_lessons)
-
-    elif User.roles == "combo":
-        pass
-        # it's combination of "teacher" ahd "student"
-        # i don't smt about this
-
-    else:
-        pass
-        # ERROR: I don't know your role...
-
-    return render_template("Timetable.html",table=order,even=even,weekday=datetime.datetime.today().weekday()+1)
+    return {'timetable':order,'even':even,
+            'weekday':weekday,'roles':roles}

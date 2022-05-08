@@ -1,8 +1,7 @@
 from flask import jsonify, redirect, render_template, request, session, url_for
 
-from ..api import auth
+from ..api import auth, table
 from . import main
-
 
 @main.route("/")
 @main.route("/index")
@@ -24,9 +23,13 @@ def get_auth(state=None, token=None):
 @main.route("/timetable")
 def timetable():
 
-    # magic
+    dict_of_vars = table.info_for_Timetable(session)
 
-    return render_template("options/Timetable.html")
+    return render_template("options/Timetable.html",
+                        table = dict_of_vars['timetable'],
+                        even = dict_of_vars['even'],
+                        weekday = dict_of_vars['weekday'],
+                        roles = dict_of_vars['weekday'] )
 
 @main.route("/login")
 def login():
