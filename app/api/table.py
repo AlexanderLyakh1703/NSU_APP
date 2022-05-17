@@ -3,7 +3,6 @@ from base64 import b64encode
 from http.client import HTTPSConnection
 
 from config import api_config as aconf
-from flask import session
 
 from datetime import datetime
 
@@ -24,8 +23,9 @@ links = {
     "schedule": "/api/schedules",
 }
 
+
 # type - раздел БД, search - параметры поиска
-def connect(type_: str, search=dict()) -> list[dict]:
+def connect(type_: str, search) -> list[dict]:
 
     # заполнение данных для авторизации
     connect = HTTPSConnection("table.nsu.ru")
@@ -34,7 +34,7 @@ def connect(type_: str, search=dict()) -> list[dict]:
 
     # собираем строку поиска
     string_of_find = ""
-    if search != dict():
+    if search:
         string_of_find = "/search?" + "&".join(
             [elem + "=" + search[elem] for elem in search.keys()]
         )
@@ -66,9 +66,9 @@ def union_of_lessons_by_groups(request_for_timetable: list[dict]):  # for teache
     while number_write + 1 < len(request_for_timetable):
 
         this_write = request_for_timetable[number_write]
-        next_write = number_writes[number_write + 1]
+        next_write = number_write[number_write + 1]
 
-        if present(this_write) == present(next_write):
+        if check_for_equals(this_write) == check_for_equals(next_write):
 
             # i am writting here swap two objects
             if this_write["id_groups"] is list:
@@ -85,7 +85,7 @@ def union_of_lessons_by_groups(request_for_timetable: list[dict]):  # for teache
     # make array of lessons
     array_of_lessons = []
 
-    for row in req_for_lessons:
+    for row in request_for_timetable:
         lesson = Lesson(row)
         array_of_lessons.append(lesson)
 
@@ -133,21 +133,16 @@ def info_for_Timetable(session):
 
     # get the parity of the week
     even = connect("parity")["actual"]  # "odd" or "even"
-
     weekday = datetime.today().weekday() + 1  # value from {1,...,7}
-
     roles = get_roles(user)
 
     if roles == "student":
-
-        id_group = connect("group", {"name": group})[0]["id"]
-
+        id_group = connect("group", {"name": user["group"]})[0]["id"]
         timetable = connect("schedule", {"id_group": id_group})
-
         order = convert(timetable)
-
-    else:  # roles = 'teacher'
-
+    else:  # roles == 'teacher'
+        fullname = " ".join(list(user["name"].split()[::-1] + [user["middlename"]]))
+        id_teacher = connect("teacher", {"fullname": fullname})[0]["id"]
         timetable = connect("schedule", {"id_teacher": id_teacher})
         order = convert(union_of_lessons_by_groups(timetable))
 
