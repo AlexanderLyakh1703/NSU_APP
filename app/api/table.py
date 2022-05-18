@@ -37,7 +37,7 @@ def connect(type_: str, search=None) -> list[dict]:
         auth=(aconf.TABLE_TOKEN, ""),
     ).text
     # возвращаем ответ в виде массива словарей
-    print(json.loads(data), sys.stderr)
+    print(json.loads(data))
     return json.loads(data)
 
 

@@ -54,4 +54,4 @@ class oauth_config(object):
 
 
 class api_config(object):
-    TABLE_TOKEN = os.getenv("TABLE_TOKEN")
+    TABLE_TOKEN = os.getenv("TABLE_TOKEN") or "SCFFAtHIAFhTa4HOBoAvOgqMDqq8uOBd_1648434328"
