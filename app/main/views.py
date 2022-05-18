@@ -4,12 +4,12 @@ from ..api import auth, table
 from . import main
 
 
-@main.route("/")
 @main.route("/index")
 def index():
     return render_template("index.html")
 
 
+@main.route("/")
 @main.route("/timetable")
 def timetable():
 

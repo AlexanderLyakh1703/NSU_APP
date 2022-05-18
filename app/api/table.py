@@ -1,10 +1,8 @@
 import json
-from base64 import b64encode
-from http.client import HTTPSConnection
-
 from config import api_config as aconf
-
+import requests
 from datetime import datetime
+import sys
 
 # импоритруем модели
 from ..model import Order, Lesson
@@ -25,27 +23,22 @@ links = {
 
 
 # type - раздел БД, search - параметры поиска
-def connect(type_: str, search) -> list[dict]:
-
-    # заполнение данных для авторизации
-    connect = HTTPSConnection("table.nsu.ru")
-    userAndPass = b64encode(aconf.TABLE_TOKEN).decode("utf-8")
-    headers = {"Authorization": "Basic %s" % userAndPass}
-
+def connect(type_: str, search=None) -> list[dict]:
     # собираем строку поиска
     string_of_find = ""
     if search:
         string_of_find = "/search?" + "&".join(
-            [elem + "=" + search[elem] for elem in search.keys()]
+            [key + "=" + value for key, value in search.items()]
         )
 
     # посылаем запрос
-    connect.request("GET", links[type] + string_of_find, headers=headers)
-    res = connect.getresponse()
-    data = res.read()
-
+    data = requests.get(
+        "https://table.nsu.ru" + links[type_] + string_of_find,
+        auth=(aconf.TABLE_TOKEN, ""),
+    ).text
     # возвращаем ответ в виде массива словарей
-    return json.loads(data.decode("utf-8"))
+    print(json.loads(data), sys.stderr)
+    return json.loads(data)
 
 
 # example: print(connect("faculty",{"id":"1"}))
@@ -120,7 +113,7 @@ def convert(list_of_dicts: list[dict]):
     array_of_lessons = []
 
     for elem in list_of_dicts:
-        array_of_lessons.append(Lesson(elem))
+        array_of_lessons.append(Lesson(**elem))
 
     order = Order(array_of_lessons)
 
@@ -129,7 +122,25 @@ def convert(list_of_dicts: list[dict]):
 
 def info_for_Timetable(session):
     # get User from variable of session
-    user = session["userinfo"]
+    # user = session["userinfo"]
+
+    user = {
+        "email": "d.sukhorukov1@g.nsu.ru",
+        "email_verified": False,
+        "family_name": "\u0421\u0443\u0445\u043e\u0440\u0443\u043a\u043e\u0432",
+        "given_name": "\u0414\u0430\u043d\u0438\u0438\u043b",
+        "groups": {
+            "NSU": "Hist",
+            "StudentCourses": "all_1y_bac",
+            "StudentFaculties": "mmf",
+            "StudentFacultyCourses": "mmf_1y_bac",
+            "StudentGroups": "21114",
+        },
+        "middlename": "\u0410\u043b\u0435\u043a\u0441\u0430\u043d\u0434\u0440\u043e\u0432\u0438\u0447",
+        "name": "\u0414\u0430\u043d\u0438\u0438\u043b \u0421\u0443\u0445\u043e\u0440\u0443\u043a\u043e\u0432",
+        "preferred_username": "d.sukhorukov1",
+        "sub": "f:a04424ec-9f9c-4ac6-85c7-fe09e25348f7:d.sukhorukov1",
+    }
 
     # get the parity of the week
     even = connect("parity")["actual"]  # "odd" or "even"
@@ -137,8 +148,8 @@ def info_for_Timetable(session):
     roles = get_roles(user)
 
     if roles == "student":
-        id_group = connect("group", {"name": user["group"]})[0]["id"]
-        timetable = connect("schedule", {"id_group": id_group})
+        id_group = connect("group", {"name": user["groups"]["StudentGroups"]})[0]["id"]
+        timetable = connect("schedule", {"id_group": str(id_group)})
         order = convert(timetable)
     else:  # roles == 'teacher'
         fullname = " ".join(list(user["name"].split()[::-1] + [user["middlename"]]))

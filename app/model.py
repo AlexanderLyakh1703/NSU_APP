@@ -16,48 +16,68 @@ class Lesson:
     def __init__(self, **kwargs):
 
         # self.id - не имеет смысла
-        self.id_teacher = kwargs['id_teacher']
-        self.id_type_lesson = kwargs['id_type_lesson']
-        self.weekday = kwargs['weekday']
+        self.id_teacher = kwargs["id_teacher"]
+        self.id_type_lesson = kwargs["type"]
+        self.weekday = kwargs["weekday"]
 
         # чётность пары
-        self.even = ["even","odd"][kwargs['weekday']>7]
+        self.even = ["even", "odd"][kwargs["weekday"] > 7]
 
-        if kwargs['id_groups'] is list:
-            self.id_list_group = kwargs['id_groups']
+        if isinstance(kwargs["id_group"], list):
+            self.id_list_group = kwargs["id_group"]
         else:
-            self.id_list_group = [ kwargs['id_groups'] ]
+            self.id_list_group = [kwargs["id_group"]]
 
-        self.id_time = kwargs['id_time']
-        self.room = kwargs['roomsokr']
+        self.id_time = kwargs["id_time"]
+        self.room = kwargs["roomsokr"]
 
     def presentation(self):
 
-        teacher_name = connect("teacher",{"id":self.id_teacher})[0]["name"]
-        type_lesson_name = connect("type-occupation",{"id":self.id_type_lesson})[0]["abbr"]
-        weekday_name = {0:"ВОСКРЕСЕНЬЕ",1:"ПОНЕДЕЛЬНИК",2:"ВТОРНИК",3:"СРЕДА",
-                        4:"ЧЕТВЕРГ",5:"ПЯТНИЦА",6:"СУББОТА"}[self.weekday%7]
+        teacher_name = connect("teacher", {"id": self.id_teacher})[0]["name"]
+        type_lesson_name = connect("type-occupation", {"id": self.id_type_lesson})[0][
+            "abbr"
+        ]
+        weekday_name = {
+            0: "ВОСКРЕСЕНЬЕ",
+            1: "ПОНЕДЕЛЬНИК",
+            2: "ВТОРНИК",
+            3: "СРЕДА",
+            4: "ЧЕТВЕРГ",
+            5: "ПЯТНИЦА",
+            6: "СУББОТА",
+        }[self.weekday % 7]
 
         even_name = self.even
 
         list_group_names = []
         for id_group in self.id_list_group:
-            group_name = connect("group",{"id":id_group})[0]["name"]
+            group_name = connect("group", {"id": id_group})[0]["name"]
             list_group_names.append(group_name)
 
-        request_for_time = connect("time",{"id":self.id_time})[0]
+        request_for_time = connect("time", {"id": self.id_time})[0]
 
-        fast_lesson_name = connect("schedule",{"id_teacher":self.id_teacher,
-                                        "id_time":self.id_time,"weekday":self.weekday})["namesokr"]
+        fast_lesson_name = connect(
+            "schedule",
+            {
+                "id_teacher": self.id_teacher,
+                "id_time": self.id_time,
+                "weekday": self.weekday,
+            },
+        )["namesokr"]
 
-        time_name = {"begin":request_for_time["begin"],
-                     "end":request_for_time["end"]}
+        time_name = {"begin": request_for_time["begin"], "end": request_for_time["end"]}
         room_name = self.room
 
-        return {"teacher":teacher_name,"type":type_lesson,
-                "weekday":weekday_name,"even":even_name,
-                "groups":list_group_names,"time":time_name,
-                "room":room_name,"name":fast_lesson_name}
+        return {
+            "teacher": teacher_name,
+            "type": type_lesson,
+            "weekday": weekday_name,
+            "even": even_name,
+            "groups": list_group_names,
+            "time": time_name,
+            "room": room_name,
+            "name": fast_lesson_name,
+        }
 
 
 # Order.shedule[weekday][time]
@@ -67,10 +87,12 @@ class Order:
     # предполагается передача массива, состоящего из Lesson
     def __init__(self, list_Of_Lesson: list[Lesson]):
 
-        self.schedule = {lesson_.weekday: {
-                        lesson.id_time: lesson for lesson in list_Of_Lesson}
-                        for lesson_ in list_Of_Lesson}
+        self.schedule = {
+            lesson_.weekday: {lesson.id_time: lesson for lesson in list_Of_Lesson}
+            for lesson_ in list_Of_Lesson
+        }
         # self.calendar = ... - это на будущее
+
 
 # class User:
 #     def __init__(self, **kwargs):
