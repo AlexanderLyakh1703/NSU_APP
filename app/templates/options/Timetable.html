@@ -1,10 +1,10 @@
-
+<% from ...table.py import presentation %>
 <!DOCTYPE html>
 <html style="font-size: 16px;">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
-    <!--<meta name="keywords" content="Понедельник, 1 ноября">-->
+    <meta name="keywords" content="Понедельник, 1 ноября">
     <meta name="description" content="">
     <meta name="page_type" content="np-template-header-footer-from-plugin">
     <title>Расписание</title>
@@ -115,8 +115,8 @@
 
                   {% for time in range(1,8) %}
 
-                      {% if time in table.schedule[weekday] %}
-                        {% set output_lesson = table.schedule[weekday][time].presentation() %}
+                      {% if time in table[weekday] %}
+                        {% set output_lesson = table[weekday][time] %}
                         <tr style="height: 64px;">
                           <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-first-column u-table-cell u-table-cell-{{ 9+(time-1)*4 }}">{{ output_lesson["time"]["begin"] }}<br>{{ output_lesson["time"]["end"] }}</td>
                           <td class="u-border-1 u-border-grey-40 u-border-no-left u-border-no-right u-table-cell">{{ output_lesson["name"] }}</td>

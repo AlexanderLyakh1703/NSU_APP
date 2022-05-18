@@ -13,8 +13,9 @@ def index():
 @main.route("/timetable")
 def timetable():
 
-    dict_of_vars = table.info_for_Timetable(session)
-    dict_of_vars["timetable"] = list(map(table.presentation,dict_of_vars["timetable"]))
+    dict_of_vars = table.getInfo(session)
+    print(dict_of_vars["timetable"])
+    # print('IT IS TIMETABLE:',dict_of_vars["timetable"])
     return render_template(
         "options/Timetable.html",
         table=dict_of_vars["timetable"],

@@ -19,7 +19,7 @@ class Lesson:
 
         # self.id - не имеет смысла
         self.id_teacher = kwargs["id_teacher"]
-        self.id_type_lesson = kwargs["type"]
+        self.type = kwargs["type"]
         self.weekday = kwargs["weekday"]
 
         # чётность пары
@@ -36,27 +36,13 @@ class Lesson:
 
 # # Order.shedule[weekday][time]
 # # по существу, это понедельный календарь
-# class Order:
-#
-#     # предполагается передача массива, состоящего из Lesson
-#     def __init__(self, list_Of_Lesson: list[Lesson]):
-#
-#         self.schedule = {
-#             lesson_.weekday: {lesson.id_time: lesson for lesson in list_Of_Lesson}
-#             for lesson_ in list_Of_Lesson
-#         }
-#         # self.calendar = ... - это на будущее
-#
-#
-# # class User:
-# #     def __init__(self, **kwargs):
-# #         # self.openid = kwargs['openid']
-# #         self.phone = kwargs['phone']
-# #         self.offline_access = kwargs['offline_access']
-# #         self.roles = kwargs['roles']
-# #         self.address = kwargs['address']
-# #         self.microprofile_jwt = kwargs['microprofile_jwt']
-# #         self.web_origins = kwargs['web_origins']
-# #         self.email = kwargs['email']
-# #         # self.profile = kwargs['profile'] - this atribute is being clarified
-# #         self.groups = kwargs['groups']
+class Order:
+
+    # предполагается передача массива, состоящего из Lesson
+    def __init__(self, list_Of_Lesson: list[Lesson]):
+
+        self.schedule = {
+            lesson_.weekday: {lesson.id_time: lesson for lesson in list_Of_Lesson}
+            for lesson_ in list_Of_Lesson
+        }
+        # self.calendar = ... - это на будущее
