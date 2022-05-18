@@ -5,7 +5,7 @@ from datetime import datetime
 import sys
 
 # импоритруем модели
-from ..model import Order, Lesson
+from ..model import Lesson
 
 # -----------------------------------------------------------------------------
 # разделы БД
@@ -28,7 +28,7 @@ def connect(type_: str, search=None) -> list[dict]:
     string_of_find = ""
     if search:
         string_of_find = "/search?" + "&".join(
-            [key + "=" + value for key, value in search.items()]
+            [str(key) + "=" + str(value) for key, value in search.items()]
         )
 
     # посылаем запрос
@@ -115,9 +115,7 @@ def convert(list_of_dicts: list[dict]):
     for elem in list_of_dicts:
         array_of_lessons.append(Lesson(**elem))
 
-    order = Order(array_of_lessons)
-
-    return order
+    return array_of_lessons
 
 
 def info_for_Timetable(session):
@@ -126,7 +124,6 @@ def info_for_Timetable(session):
 
     user = {
         "email": "d.sukhorukov1@g.nsu.ru",
-        "email_verified": False,
         "family_name": "\u0421\u0443\u0445\u043e\u0440\u0443\u043a\u043e\u0432",
         "given_name": "\u0414\u0430\u043d\u0438\u0438\u043b",
         "groups": {
@@ -157,4 +154,51 @@ def info_for_Timetable(session):
         timetable = connect("schedule", {"id_teacher": id_teacher})
         order = convert(union_of_lessons_by_groups(timetable))
 
+
     return {"timetable": order, "even": even, "weekday": weekday, "roles": roles}
+
+def presentation(self):
+
+    teacher_name = connect("teacher", {"id": self.id_teacher})[0]["name"]
+    type_lesson_name = str(self.id_type_lesson)
+    weekday_name = {
+        0: "ВОСКРЕСЕНЬЕ",
+        1: "ПОНЕДЕЛЬНИК",
+        2: "ВТОРНИК",
+        3: "СРЕДА",
+        4: "ЧЕТВЕРГ",
+        5: "ПЯТНИЦА",
+        6: "СУББОТА",
+    }[self.weekday % 7]
+
+    even_name = self.even
+
+    list_group_names = []
+    for id_group in self.id_list_groups:
+        group_name = connect("group", {"id": id_group})[0]["name"]
+        list_group_names.append(group_name)
+
+    request_for_time = connect("time", {"id": self.id_time})[0]
+
+    fast_lesson_name = connect(
+        "schedule",
+        {
+            "id_teacher": str(self.id_teacher),
+            "id_time": str(self.id_time),
+            "weekday": str(self.weekday),
+        },
+    )[0]["namesokr"]
+
+    time_name = {"begin": request_for_time["begin"], "end": request_for_time["end"]}
+    room_name = self.room
+
+    return {
+        "teacher": teacher_name,
+        "type": type_lesson_name,
+        "weekday": weekday_name,
+        "even": even_name,
+        "groups": list_group_names,
+        "time": time_name,
+        "room": room_name,
+        "name": fast_lesson_name,
+    }

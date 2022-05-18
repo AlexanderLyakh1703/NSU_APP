@@ -14,7 +14,7 @@ def index():
 def timetable():
 
     dict_of_vars = table.info_for_Timetable(session)
-
+    dict_of_vars["timetable"] = list(map(table.presentation,dict_of_vars["timetable"]))
     return render_template(
         "options/Timetable.html",
         table=dict_of_vars["timetable"],

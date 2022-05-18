@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html style="font-size: 16px;">
   <head>
@@ -72,14 +73,14 @@
 
       <!-- first-weekday - one writes -->
       {% if even == "even" %}
-      {{ set arr_weekday = list(range(1,7))+list(range(8,14)) }}
+      {% set arr_weekday = [1,2,3,4,5,6,8,9,10,11,12,13] %}
       {% else %}
-      {{ set arr_weekday = list(range(8,14))+list(range(1,7)) }}
+      {% set arr_weekday = [8,9,10,11,12,13,1,2,3,4,5,6] %}
       {% endif %}
 
       {% set count_of_weekday = 1 %}
 
-      {{ arr_weekday = arr_weekday[weekday-1::]+arr_weekday[:weekday-1:] }}
+      {% set arr_weekday = arr_weekday[weekday-1::]+arr_weekday[:weekday-1:] %}
       {% for weekday in arr_weekday %}
 
       {% set weekday_alpha = {0:"ВОСКРЕСЕНЬЕ",1:"ПОНЕДЕЛЬНИК",2:"ВТОРНИК",3:"СРЕДА",
@@ -150,7 +151,7 @@
             </div>
           </div>
         </div>
-        {{ count_of_weekday += 1 }}
+        {% set count_of_weekday =  count_of_weekday + 1 %}
         {% endfor %}
       </div>
       <!-- ALL END -->
