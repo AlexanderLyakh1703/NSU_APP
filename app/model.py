@@ -24,7 +24,7 @@ class Lesson:
         self.even = ["even", "odd"][kwargs["weekday"] > 7]
 
         if isinstance(kwargs["id_group"], list):
-            self.id_list_groups.append(kwargs["id_group"])
+            self.id_list_groups = kwargs["id_group"]
         else:
             self.id_list_groups = [kwargs["id_group"]]
 
