@@ -17,12 +17,17 @@ def timetable():
     print(dict_of_vars["timetable"])
     # print('IT IS TIMETABLE:',dict_of_vars["timetable"])
     return render_template(
-        "options/Timetable.html",
+        "timetable.html",
         table=dict_of_vars["timetable"],
         even=dict_of_vars["even"],
         weekday=dict_of_vars["weekday"],
         roles=dict_of_vars["roles"],
     )
+
+
+@main.route("/about")
+def about():
+    return render_template("about.html")
 
 
 @main.route("/login")
