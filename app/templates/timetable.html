@@ -1,10 +1,15 @@
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/Timetable.css') }}">
+</head>
+
+<body>
 {% extends 'base.html'%}
 {% block title %}Расписание{% endblock %}
 
 {% block text %}
-{{table}}
+<center>
 <!-- Slideshow container -->
-<div class="slideshow-container">
+<div class="slideshow-container" style="margin:25px;">
 
 {% set dateToName = {
       0: "ВОСКРЕСЕНЬЕ",
@@ -29,9 +34,9 @@
 {% for weekday in array_of_days %}
 <div class="mySlides fade">
       <div class="weekday"> {{ dateToName[weekday%7] }} </div>
+      <div class="table">
+      <table>
       {% if weekday in timetable.keys() %}
-            <div class="table">
-              <table>
                 <tr><th>Время</th><th>Предмет</th><th>Ауд.</th> <th>{{ "Преподаватель" if role == "student" else "Группы" }}</th></tr>
             {% for time in range(1,8) %}
               {% if time in timetable[weekday].keys() %}
@@ -42,24 +47,67 @@
               <tr><td>{{timeToName[time]['begin']}}<br>{{timeToName[time]['end']}}</td><td>-</td><td>-</td><td>-</td></tr>
               {% endif %}
             {% endfor %}
-            </table>
-            </div>
       {% else %}
-          <div class="table">
-            <table>
               <tr><th>Время</th><th>Предмет</th><th>Ауд.</th> <th>{{ "Преподаватель" if role == "student" else "Группы" }}</th></tr>
             {% for time in range(1,8) %}
               <tr><td>{{timeToName[time]['begin']}}<br>{{timeToName[time]['end']}}</td><td>-</td><td>-</td><td>-</td></tr>
             {% endfor %}
-            </table>
-          </div>
       {% endif %}
+      </table>
+      </div>
 </div>
 {% endfor %}
-
-
-
+<br>
+<a class="prev" onclick="plusSlides(-1)">❮</a>
+<a class="next" onclick="plusSlides(1)">❯</a>
 </div>
+</center>
+<center>
+<div style="text-align:center">
+  <span class="dot" onclick="currentSlide(1)"></span>
+  <span class="dot" onclick="currentSlide(2)"></span>
+  <span class="dot" onclick="currentSlide(3)"></span>
+  <span class="dot" onclick="currentSlide(4)"></span>
+  <span class="dot" onclick="currentSlide(5)"></span>
+  <span class="dot" onclick="currentSlide(6)"></span>
+  <span class="dot" onclick="currentSlide(7)"></span>
+  <span class="dot" onclick="currentSlide(8)"></span>
+  <span class="dot" onclick="currentSlide(9)"></span>
+  <span class="dot" onclick="currentSlide(10)"></span>
+  <span class="dot" onclick="currentSlide(11)"></span>
+  <span class="dot" onclick="currentSlide(12)"></span>
+</div>
+</center>
 
+<script>
+var slideIndex = 1;
+showSlides(slideIndex);
+
+function plusSlides(n) {
+  showSlides(slideIndex += n);
+}
+
+function currentSlide(n) {
+  showSlides(slideIndex = n);
+}
+
+function showSlides(n) {
+  var i;
+  var slides = document.getElementsByClassName("mySlides");
+  var dots = document.getElementsByClassName("dot");
+  if (n > slides.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = slides.length}
+  for (i = 0; i < slides.length; i++) {
+      slides[i].style.display = "none";
+  }
+  for (i = 0; i < dots.length; i++) {
+      dots[i].className = dots[i].className.replace(" active", "");
+  }
+  slides[slideIndex-1].style.display = "block";
+  dots[slideIndex-1].className += " active";
+}
+</script>
 
 {% endblock %}
+
+</body>
