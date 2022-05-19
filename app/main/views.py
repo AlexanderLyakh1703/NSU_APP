@@ -29,6 +29,7 @@ def timetable():
     for weekday in timetable.keys():
         for time in timetable[weekday].keys():
             timetable[weekday][time] = table.presentation(timetable[weekday][time])
+            print(timetable[weekday][time])
 
     return render_template(
         "timetable.html",

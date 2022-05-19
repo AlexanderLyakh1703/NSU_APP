@@ -41,12 +41,10 @@ def connect(type_: str, search=None) -> list[dict]:
     return json.loads(data)
 
 
-# example: print(connect("faculty",{"id":"1"}))
-
 
 # function for sortings and check lessons
 def check_for_equals(write: dict()):
-    return [write["weekday"], write["id_time"]]
+    return [write["weekday"], write["id_time"],write["id_teacher"]]
 
 
 # объединяем пары с одинаковым днём недели, временем и преподавателем
@@ -96,10 +94,7 @@ def get_roles(user):
     id_teacher = connect("teacher", {"fullname": fullname})
 
     # есть ровно ОДНА запись с таким fullname И есть он НЕ бакалавр
-    if (
-        len(id_teacher) == 1
-        and user["groups"]["StudentCourses"].split("_")[-1] != "bac"
-    ):
+    if len(id_teacher) == 1:
         roles = "teacher"
     else:
         roles = "student"
@@ -114,7 +109,8 @@ def convert(list_of_dicts: list[dict]):
 
     for elem in list_of_dicts:
         array_of_lessons.append(Lesson(**elem))
-
+        print(elem)
+        
     res = Order(array_of_lessons)
 
     return res
@@ -149,11 +145,15 @@ def getInfo(session):
     if roles == "student":
         id_group = connect("group", {"name": user["groups"]["StudentGroups"]})[0]["id"]
         timetable = connect("schedule", {"id_group": str(id_group)})
+        for elem in timetable:
+            print(elem)
         order = convert(timetable)
     else:  # roles == 'teacher'
         fullname = " ".join(list(user["name"].split()[::-1] + [user["middlename"]]))
         id_teacher = connect("teacher", {"fullname": fullname})[0]["id"]
         timetable = connect("schedule", {"id_teacher": str(id_teacher)})
+        # for elem in timetable:
+        #     print(elem)
         order = convert(union_of_lessons_by_groups(timetable))
 
 
