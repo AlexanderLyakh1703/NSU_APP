@@ -2,7 +2,7 @@
 {% block title %}Расписание{% endblock %}
 
 {% block text %}
-
+{{table}}
 <!-- Slideshow container -->
 <div class="slideshow-container">
 
@@ -25,19 +25,19 @@
   7:{'begin':'20:00' ,'end':'21:25' },
 }
   %}
-{{table}}
+
 {% for weekday in array_of_days %}
 <div class="mySlides fade">
       <div class="weekday"> {{ dateToName[weekday%7] }} </div>
-      {% if weekday in timteble %}
+      {% if weekday in timetable.keys() %}
             <div class="table">
               <table>
                 <tr><th>Время</th><th>Предмет</th><th>Ауд.</th> <th>{{ "Преподаватель" if role == "student" else "Группы" }}</th></tr>
             {% for time in range(1,8) %}
-              {% if time in table[weekday] %}
+              {% if time in timetable[weekday].keys() %}
 
-                <tr><td>{{ table[weekday][time]["time"]['begin']}}<br>{{table[weekday][time]["time"]['end'] }} </td><td>{{ table[weekday][time]["name"] }}</td> <td>{{ table[weekday][time]["room"] }}</td>
-                <td>{{ table[weekday][time]['teacher'] if role == "student" else ' '.join(table[weekday][time]['groups']) }}</td></tr>
+                <tr><td>{{ timetable[weekday][time]["time"]['begin']}}<br>{{timetable[weekday][time]["time"]['end'] }} </td><td>{{ timetable[weekday][time]["name"] }}</td> <td>{{ timetable[weekday][time]["room"] }}</td>
+                <td>{{ timetable[weekday][time]['teacher'] if role == "student" else ' '.join(timetable[weekday][time]['groups']) }}</td></tr>
               {% else %}
               <tr><td>{{timeToName[time]['begin']}}<br>{{timeToName[time]['end']}}</td><td>-</td><td>-</td><td>-</td></tr>
               {% endif %}
