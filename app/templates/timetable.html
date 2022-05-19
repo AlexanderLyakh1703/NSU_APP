@@ -1,8 +1,65 @@
 {% extends 'base.html'%}
 {% block title %}Расписание{% endblock %}
 
-{% block text%}
+{% block text %}
 
-{{ table[1][1].__dict__}}
+<!-- Slideshow container -->
+<div class="slideshow-container">
+
+{% set dateToName = {
+      0: "ВОСКРЕСЕНЬЕ",
+      1: "ПОНЕДЕЛЬНИК",
+      2: "ВТОРНИК",
+      3: "СРЕДА",
+      4: "ЧЕТВЕРГ",
+      5: "ПЯТНИЦА",
+      6: "СУББОТА",
+  } %}
+{% set timeToName = {
+  1:{'begin':'9:00' ,'end':'10:35' },
+  2:{'begin':'10:50' ,'end':'12:25' },
+  3:{'begin':'12:40' ,'end':'14:15' },
+  4:{'begin':'14:30' ,'end':'16:05' },
+  5:{'begin':'16:20' ,'end':'17:55' },
+  6:{'begin':'18:10' ,'end':'19:45' },
+  7:{'begin':'20:00' ,'end':'21:25' },
+}
+  %}
+{{table}}
+{% for weekday in array_of_days %}
+<div class="mySlides fade">
+      <div class="weekday"> {{ dateToName[weekday%7] }} </div>
+      {% if weekday in timteble %}
+            <div class="table">
+              <table>
+                <tr><th>Время</th><th>Предмет</th><th>Ауд.</th> <th>{{ "Преподаватель" if role == "student" else "Группы" }}</th></tr>
+            {% for time in range(1,8) %}
+              {% if time in table[weekday] %}
+
+                <tr><td>{{ table[weekday][time]["time"]['begin']}}<br>{{table[weekday][time]["time"]['end'] }} </td><td>{{ table[weekday][time]["name"] }}</td> <td>{{ table[weekday][time]["room"] }}</td>
+                <td>{{ table[weekday][time]['teacher'] if role == "student" else ' '.join(table[weekday][time]['groups']) }}</td></tr>
+              {% else %}
+              <tr><td>{{timeToName[time]['begin']}}<br>{{timeToName[time]['end']}}</td><td>-</td><td>-</td><td>-</td></tr>
+              {% endif %}
+            {% endfor %}
+            </table>
+            </div>
+      {% else %}
+          <div class="table">
+            <table>
+              <tr><th>Время</th><th>Предмет</th><th>Ауд.</th> <th>{{ "Преподаватель" if role == "student" else "Группы" }}</th></tr>
+            {% for time in range(1,8) %}
+              <tr><td>{{timeToName[time]['begin']}}<br>{{timeToName[time]['end']}}</td><td>-</td><td>-</td><td>-</td></tr>
+            {% endfor %}
+            </table>
+          </div>
+      {% endif %}
+</div>
+{% endfor %}
+
+
+
+</div>
+
 
 {% endblock %}
