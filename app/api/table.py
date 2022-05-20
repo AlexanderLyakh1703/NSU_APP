@@ -2,10 +2,11 @@ import json
 from config import api_config as aconf
 import requests
 from datetime import datetime
-import sys
+import asyncio as ai
+import concurrent.futures
 
 # импоритруем модели
-from ..model import Lesson,Order
+from ..model import Lesson, Order
 
 # -----------------------------------------------------------------------------
 # разделы БД
@@ -41,10 +42,45 @@ def connect(type_: str, search=None) -> list[dict]:
     return json.loads(data)
 
 
+def get_or_create_eventloop():
+    try:
+        return ai.get_event_loop()
+    except RuntimeError as ex:
+        if "There is no current event loop in thread" in str(ex):
+            loop = ai.new_event_loop()
+            ai.set_event_loop(loop)
+            return ai.get_event_loop()
+
+
+def get_list_group_names(list_search) -> list[dict]:
+
+    result = []
+    urls = [
+        f"https://table.nsu.ru/api/groups/search?id={search}" for search in list_search
+    ]
+
+    async def get_urls():
+        with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
+
+            loop = ai.get_event_loop()
+            futures = [
+                loop.run_in_executor(
+                    executor, lambda: requests.get(url, auth=(aconf.TABLE_TOKEN, ""))
+                )
+                for url in urls
+            ]
+            for response in await ai.gather(*futures):
+                obj = json.loads(response.text)
+                result.append(obj)
+
+    loop = get_or_create_eventloop()
+    loop.run_until_complete(get_urls())
+    return result
+
 
 # function for sortings and check lessons
 def check_for_equals(write: dict()):
-    return [write["weekday"], write["id_time"],write["id_teacher"]]
+    return [write["weekday"], write["id_time"], write["id_teacher"]]
 
 
 # объединяем пары с одинаковым днём недели, временем и преподавателем
@@ -156,8 +192,13 @@ def getInfo(session):
         #     print(elem)
         order = convert(union_of_lessons_by_groups(timetable))
 
+    return {
+        "timetable": order.schedule,
+        "even": even,
+        "weekday": weekday,
+        "roles": roles,
+    }
 
-    return {"timetable": order.schedule, "even": even, "weekday": weekday, "roles": roles}
 
 def presentation(lesson):
 
@@ -175,10 +216,13 @@ def presentation(lesson):
 
     even_name = lesson.even
 
-    list_group_names = []
-    for id_group in lesson.id_list_groups:
-        group_name = connect("group", {"id": id_group})[0]["name"]
-        list_group_names.append(group_name)
+    list_group_names = (
+        lesson.id_list_groups
+    )  # get_list_group_names(lesson.id_list_groups)
+
+    # for id_group in lesson.id_list_groups:
+    #     group_name = connect("group", {"id": id_group})[0]["name"]
+    #     list_group_names.append(group_name)
 
     request_for_time = connect("time", {"id": lesson.id_time})[0]
 

@@ -19,11 +19,11 @@ def timetable():
     thisData = dict_of_vars["weekday"]
 
     if dict_of_vars["even"] == "even":
-        array_of_days = [1,2,3,4,5,6,8,9,10,11,12,13]
+        array_of_days = [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13]
     else:
-        array_of_days = [8,9,10,11,12,13,1,2,3,4,5,6]
+        array_of_days = [8, 9, 10, 11, 12, 13, 1, 2, 3, 4, 5, 6]
 
-    array_of_days = array_of_days[thisData-1::] + array_of_days[:thisData-1:]
+    array_of_days = array_of_days[thisData - 1 : :] + array_of_days[: thisData - 1 :]
 
     timetable = dict_of_vars["timetable"]
     for weekday in timetable.keys():
