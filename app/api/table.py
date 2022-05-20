@@ -110,7 +110,7 @@ def convert(list_of_dicts: list[dict]):
     for elem in list_of_dicts:
         array_of_lessons.append(Lesson(**elem))
         print(elem)
-        
+
     res = Order(array_of_lessons)
 
     return res
@@ -193,8 +193,7 @@ def presentation(lesson):
 
     time_name = {"begin": request_for_time["begin"], "end": request_for_time["end"]}
     room_name = lesson.room
-
-    return {
+    ret_dict = {
         "teacher": teacher_name,
         "type": type_lesson_name,
         "weekday": weekday_name,
@@ -204,3 +203,5 @@ def presentation(lesson):
         "room": room_name,
         "name": fast_lesson_name,
     }
+    # print(ret_dict)
+    return ret_dict

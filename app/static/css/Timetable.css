@@ -29,6 +29,8 @@
 /* On hover, add a black background color with a little bit see-through */
 .prev, .next {
   background-color: rgba(0,0,0,0.8);
+  width:50%;
+  height:50%;
 }
 
 /* Caption text */
