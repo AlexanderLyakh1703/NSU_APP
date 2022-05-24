@@ -13,29 +13,22 @@ def index():
 @main.route("/timetable")
 def timetable():
 
-    dict_of_vars = table.getInfo(session)
-    print(dict_of_vars["timetable"])
+    Info,role,even = table.get_info(session)
 
-    thisData = dict_of_vars["weekday"]
+    thisData = datetime.today().weekday() + 1
 
-    if dict_of_vars["even"] == "even":
+    if even == "even":
         array_of_days = [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13]
     else:
         array_of_days = [8, 9, 10, 11, 12, 13, 1, 2, 3, 4, 5, 6]
 
     array_of_days = array_of_days[thisData - 1 : :] + array_of_days[: thisData - 1 :]
 
-    timetable = dict_of_vars["timetable"]
-    for weekday in timetable.keys():
-        for time in timetable[weekday].keys():
-            timetable[weekday][time] = table.presentation(timetable[weekday][time])
-            print(timetable[weekday][time])
-
     return render_template(
         "timetable.html",
-        timetable=timetable,
+        timetable=Info,
         array_of_days=array_of_days,
-        role=dict_of_vars["roles"],
+        role=role,
         # time=
     )
 
